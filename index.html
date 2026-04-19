@@ -6,26 +6,21 @@
   <title>Калькулятор наполненности цистерны 🛢️</title>
   
   <!-- Yandex.Metrika counter -->
-  <script type="text/javascript">
-     (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-     m[i].l=1*new Date();
-     for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-     k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-     (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-     ym(XXXXXXXX, "init", {   // 👈 ЗАМЕНИТЕ XXXXXXXX НА ВАШ НОМЕР СЧЁТЧИКА
-        clickmap:true,
-        trackLinks:true,
-        accurateTrackBounce:true,
-        webvisor:true
-     });
-  </script>
-  <noscript><div><img src="https://mc.yandex.ru/watch/XXXXXXXX" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-  <!-- /Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=108668299', 'ym');
+
+    ym(108668299, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/108668299" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       min-height: 100vh;
@@ -34,250 +29,224 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 16px;
+      padding: 12px;
     }
     .card {
-      max-width: 780px;
+      max-width: 700px;
       width: 100%;
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(8px);
-      border-radius: 40px;
-      padding: 24px 24px 32px;
-      box-shadow: 0 25px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 215, 100, 0.2);
-      transition: all 0.2s;
+      border-radius: 36px;
+      padding: 20px 20px 24px;
+      box-shadow: 0 20px 35px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 215, 100, 0.2);
     }
     h1 {
-      margin: 0 0 8px 0;
+      margin: 0 0 4px 0;
       font-weight: 600;
-      font-size: 2rem;
+      font-size: 1.9rem;
       color: #1e3c5c;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
     }
     h1 span {
       background: #f7b32b;
-      padding: 4px 14px;
-      border-radius: 60px;
-      font-size: 1rem;
+      padding: 4px 12px;
+      border-radius: 40px;
+      font-size: 0.9rem;
       color: #0a1c2a;
-      letter-spacing: 0.5px;
     }
     .subhead {
-      margin-top: -5px;
-      margin-bottom: 24px;
+      margin-bottom: 18px;
       color: #40627c;
       font-weight: 400;
       border-left: 4px solid #f7b32b;
-      padding-left: 16px;
+      padding-left: 14px;
+      font-size: 0.95rem;
     }
     .params-panel {
       display: flex;
       flex-wrap: wrap;
-      gap: 20px 30px;
+      gap: 12px 20px;
       background: #eef3f8;
-      padding: 18px 20px;
-      border-radius: 32px;
-      margin-bottom: 24px;
-      box-shadow: inset 0 2px 5px rgba(0,0,0,0.02), 0 6px 10px rgba(0, 0, 0, 0.05);
+      padding: 14px 18px;
+      border-radius: 28px;
+      margin-bottom: 18px;
     }
     .param {
       display: flex;
       flex-direction: column;
-      min-width: 130px;
+      min-width: 120px;
     }
     .param label {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.4px;
       color: #2c4b6b;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     .param input {
       background: white;
       border: 1px solid #bdd1e0;
-      border-radius: 48px;
-      padding: 12px 16px;
-      font-size: 1.2rem;
+      border-radius: 40px;
+      padding: 10px 14px;
+      font-size: 1.1rem;
       font-weight: 500;
       color: #0f2838;
-      box-shadow: 0 2px 3px rgba(0,0,0,0.03);
-      transition: 0.15s;
-      width: 100%;
       outline: none;
       font-family: inherit;
     }
-    .param input:focus {
-      border-color: #f7b32b;
-      box-shadow: 0 0 0 3px rgba(247, 179, 43, 0.2);
-    }
-    .param input.invalid {
-      border-color: #e03a3a;
-      box-shadow: 0 0 0 3px rgba(224, 58, 58, 0.15);
-    }
-    .param input[type=number] {
-      -moz-appearance: textfield;
-    }
-    .param input[type=number]::-webkit-outer-spin-button,
-    .param input[type=number]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-    /* readonly поле для диаметра */
+    .param input:focus { border-color: #f7b32b; box-shadow: 0 0 0 3px rgba(247,179,43,0.2); }
+    .param input.invalid { border-color: #e03a3a; }
     .param input[readonly] {
       background: #e2eaf2;
       border-color: #a6bbce;
       color: #1e3c5c;
       cursor: default;
     }
-
-    /* Слайдер */
-    .level-slider-area {
-      margin: 10px 0 16px;
+    
+    /* Улучшенный слайдер — контрастный thumb */
+    .level-area {
+      margin: 10px 0 12px;
     }
     .level-header {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     .level-header label {
       font-weight: 600;
       color: #1e3c5c;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
     }
-    .level-value-badge {
+    .level-badge {
       background: #0a1c2a;
-      padding: 6px 16px;
-      border-radius: 40px;
+      padding: 5px 14px;
+      border-radius: 36px;
       color: #ffd966;
       font-weight: 700;
-      font-size: 1.4rem;
-      box-shadow: inset 0 1px 3px #00000033, 0 4px 6px #0000001a;
+      font-size: 1.3rem;
     }
     input[type=range] {
       width: 100%;
-      margin: 10px 0;
+      margin: 6px 0;
       -webkit-appearance: none;
       background: transparent;
     }
     input[type=range]::-webkit-slider-runnable-track {
-      height: 12px;
-      background: #ced9e3;
-      border-radius: 30px;
+      height: 10px;
+      background: #b0c4d9;
+      border-radius: 20px;
       box-shadow: inset 0 1px 4px #0f1e2b33;
     }
     input[type=range]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      height: 36px;
-      width: 36px;
-      border-radius: 36px;
+      height: 34px;
+      width: 34px;
+      border-radius: 34px;
       background: #f7b32b;
       margin-top: -12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 0 0 4px rgba(247, 179, 43, 0.2);
-      border: 2px solid white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3), 0 0 0 3px rgba(0,0,0,0.1);
+      border: 2px solid #ffffff;
       cursor: grab;
       transition: 0.1s;
     }
     input[type=range]::-moz-range-track {
-      height: 12px;
-      background: #ced9e3;
-      border-radius: 30px;
+      height: 10px;
+      background: #b0c4d9;
+      border-radius: 20px;
     }
     input[type=range]::-moz-range-thumb {
-      height: 36px;
-      width: 36px;
-      border-radius: 36px;
+      height: 34px;
+      width: 34px;
+      border-radius: 34px;
       background: #f7b32b;
-      border: 2px solid white;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      border: 2px solid #ffffff;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
       cursor: grab;
     }
-
-    .viz-container {
+    /* Для тёмной темы трек */
+    input[type=range]::-moz-range-track { background: #9aafc4; }
+    
+    /* Компактные результаты */
+    .inline-results {
       display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      justify-content: center;
-      margin: 20px 0 16px;
-    }
-    .canvas-box {
-      background: #102331;
-      border-radius: 28px;
-      padding: 12px;
-      box-shadow: inset 0 0 0 1px #3a556b, 0 10px 18px #00000033;
-      text-align: center;
-    }
-    .canvas-box p {
-      margin: 8px 0 0;
-      color: #bdd1e0;
-      font-weight: 500;
-      font-size: 0.9rem;
-      letter-spacing: 0.3px;
-    }
-    canvas {
-      display: block;
-      margin: 0 auto;
-      border-radius: 18px;
-      background: #0e1c26;
-      width: 100%;
-      height: auto;
-      max-width: 300px;
-      aspect-ratio: 1/1;
-      touch-action: none;
-    }
-    #sideCanvas {
-      aspect-ratio: 2 / 1;
-      max-width: 420px;
-    }
-
-    .results {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
+      gap: 12px;
       justify-content: space-around;
-      margin-top: 20px;
+      margin: 14px 0 10px;
     }
-    .result-card {
+    .res-badge {
       background: #1e3c5c;
-      border-radius: 28px;
-      padding: 16px 22px;
-      flex: 1 1 160px;
+      border-radius: 50px;
+      padding: 10px 16px;
       color: white;
-      box-shadow: 0 10px 12px #0000002e;
+      flex: 1;
+      text-align: center;
+      box-shadow: 0 6px 8px #0000001a;
     }
-    .result-card .label {
-      font-size: 0.9rem;
+    .res-badge .label {
+      font-size: 0.8rem;
       opacity: 0.8;
       text-transform: uppercase;
     }
-    .result-card .value {
-      font-size: 2.4rem;
+    .res-badge .value {
+      font-size: 1.8rem;
       font-weight: 800;
       line-height: 1.2;
       color: #ffda7c;
     }
-    .result-card .unit {
-      font-size: 1rem;
-      font-weight: 400;
-      margin-left: 6px;
-      opacity: 0.8;
+    .res-badge .unit {
+      font-size: 0.9rem;
+      margin-left: 4px;
+    }
+    
+    /* Визуализация */
+    .viz-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin: 10px 0 5px;
+    }
+    .canvas-box {
+      background: #102331;
+      border-radius: 24px;
+      padding: 8px;
+      box-shadow: inset 0 0 0 1px #3a556b, 0 10px 15px #00000033;
+      text-align: center;
+    }
+    canvas {
+      display: block;
+      margin: 0 auto;
+      border-radius: 16px;
+      background: #0e1c26;
+      width: 100%;
+      height: auto;
+      max-width: 280px;
+      aspect-ratio: 1/1;
+    }
+    #sideCanvas {
+      aspect-ratio: 2 / 1;
+      max-width: 360px;
+    }
+    .canvas-box p {
+      margin: 6px 0 2px;
+      color: #bdd1e0;
+      font-weight: 500;
+      font-size: 0.8rem;
     }
     .footnote {
       text-align: right;
-      margin-top: 18px;
+      margin-top: 14px;
       color: #5f7e9c;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
     }
   </style>
 </head>
 <body>
 <div class="card">
-  <h1>
-    🛢️ Цистерна
-    <span>бензин</span>
-  </h1>
+  <h1>🛢️ Цистерна <span>бензин</span></h1>
   <div class="subhead">Горизонтальный цилиндр · плоские днища</div>
 
   <div class="params-panel">
@@ -290,17 +259,32 @@
       <input type="number" id="lengthInput" min="0.1" max="50" step="0.1" value="4.5" inputmode="decimal">
     </div>
     <div class="param">
-      <label>⚡ Макс. уровень (диаметр)</label>
+      <label>⚡ Макс. уровень</label>
       <input type="text" id="diameterDisplay" readonly tabindex="-1">
     </div>
   </div>
 
-  <div class="level-slider-area">
+  <div class="level-area">
     <div class="level-header">
       <label>⛽ Уровень бензина</label>
-      <div class="level-value-badge" id="levelDisplay">0.00 м</div>
+      <div class="level-badge" id="levelDisplay">0.00 м</div>
     </div>
-    <input type="range" id="levelSlider" min="0" max="2.4" step="0.001" value="1.0" aria-label="Уровень топлива, регулируйте пальцем">
+    <input type="range" id="levelSlider" min="0" max="2.4" step="0.001" value="1.0">
+  </div>
+
+  <div class="inline-results">
+    <div class="res-badge">
+      <div class="label">Объём</div>
+      <div class="value"><span id="volumeValue">0.00</span><span class="unit">м³</span></div>
+    </div>
+    <div class="res-badge">
+      <div class="label">Заполнено</div>
+      <div class="value"><span id="percentValue">0.0</span><span class="unit">%</span></div>
+    </div>
+    <div class="res-badge">
+      <div class="label">Полный</div>
+      <div class="value"><span id="fullVolumeValue">0.00</span><span class="unit">м³</span></div>
+    </div>
   </div>
 
   <div class="viz-container">
@@ -309,35 +293,17 @@
       <p>🔵 Поперечный разрез</p>
     </div>
     <div class="canvas-box">
-      <canvas id="sideCanvas" width="420" height="210"></canvas>
+      <canvas id="sideCanvas" width="400" height="200"></canvas>
       <p>⬅️ Вид сбоку (L = <span id="sideLengthLabel">4.5</span> м)</p>
     </div>
   </div>
-
-  <div class="results">
-    <div class="result-card">
-      <div class="label">Объём бензина</div>
-      <div class="value"><span id="volumeValue">0.00</span><span class="unit">м³</span></div>
-    </div>
-    <div class="result-card">
-      <div class="label">Заполнено</div>
-      <div class="value"><span id="percentValue">0.0</span><span class="unit">%</span></div>
-    </div>
-    <div class="result-card">
-      <div class="label">Полный объём</div>
-      <div class="value"><span id="fullVolumeValue">0.00</span><span class="unit">м³</span></div>
-    </div>
-  </div>
-  <div class="footnote">
-    ⚡ Двигайте ползунок — пальцем удобно
-  </div>
+  <div class="footnote">⚡ Двигайте ползунок — пальцем удобно</div>
 </div>
 
 <script>
   (function() {
     "use strict";
 
-    // DOM элементы
     const radiusInput = document.getElementById('radiusInput');
     const lengthInput = document.getElementById('lengthInput');
     const diameterDisplay = document.getElementById('diameterDisplay');
@@ -352,19 +318,16 @@
     const ctxFront = frontCanvas.getContext('2d');
     const ctxSide = sideCanvas.getContext('2d');
 
-    // Состояние (корректные значения)
     let radius = 1.2;
     let length = 4.5;
     let level = 1.0;
 
-    // Вспомогательные функции
     function segmentArea(R, h) {
       if (h <= 0) return 0;
       if (h >= 2 * R) return Math.PI * R * R;
       const y = R - h;
-      const acosArg = y / R;
-      const clamped = Math.min(1, Math.max(-1, acosArg));
-      return R * R * Math.acos(clamped) - y * Math.sqrt(Math.max(0, R * R - y * y));
+      const acosArg = Math.min(1, Math.max(-1, y / R));
+      return R * R * Math.acos(acosArg) - y * Math.sqrt(Math.max(0, R*R - y*y));
     }
 
     function calculateVolumes() {
@@ -372,61 +335,60 @@
       const L = length;
       const h = Math.min(level, 2 * R);
       const area = segmentArea(R, h);
-      const liquidVolume = area * L;
-      const fullVolume = Math.PI * R * R * L;
-      const percent = fullVolume > 0 ? (liquidVolume / fullVolume) * 100 : 0;
-      return { liquidVolume, fullVolume, percent };
+      const liquid = area * L;
+      const full = Math.PI * R * R * L;
+      const percent = full > 0 ? (liquid / full) * 100 : 0;
+      return { liquid, full, percent };
     }
 
-    // Отрисовка поперечного разреза (с точной линией уровня)
-    function drawFrontCanvas(R, h) {
+    // Рисование с улучшенной читаемостью текста
+    function drawFrontCanvas(R, h, liquidVol, percentVal) {
       const size = 300;
       const padding = 20;
-      const drawableSize = size - 2 * padding;
-      const scale = drawableSize / (2 * R);
+      const drawable = size - 2 * padding;
+      const scale = drawable / (2 * R);
       
       ctxFront.clearRect(0, 0, size, size);
       const cx = size / 2;
       const cy = size / 2;
-      const radiusPx = R * scale;
+      const rPx = R * scale;
       
-      // Фон бака
+      // Фон цистерны
       ctxFront.beginPath();
-      ctxFront.arc(cx, cy, radiusPx, 0, 2 * Math.PI);
+      ctxFront.arc(cx, cy, rPx, 0, 2 * Math.PI);
       ctxFront.fillStyle = '#1e3647';
       ctxFront.fill();
       ctxFront.strokeStyle = '#6b8fa7';
       ctxFront.lineWidth = 2.5;
       ctxFront.stroke();
       
-      // Заливка жидкости (клип по окружности)
-      const bottomY = cy + radiusPx;
-      const liquidHeightPx = h * scale;
-      const liquidTopY = bottomY - liquidHeightPx;
+      const bottomY = cy + rPx;
+      const liquidH = h * scale;
+      const liquidTopY = bottomY - liquidH;
       
+      // Жидкость
       ctxFront.save();
       ctxFront.beginPath();
-      ctxFront.arc(cx, cy, radiusPx, 0, 2 * Math.PI);
+      ctxFront.arc(cx, cy, rPx, 0, 2 * Math.PI);
       ctxFront.clip();
       
-      const gradient = ctxFront.createLinearGradient(cx, liquidTopY, cx, bottomY);
-      gradient.addColorStop(0, '#f9d56e');
-      gradient.addColorStop(1, '#d4a017');
-      ctxFront.fillStyle = gradient;
+      const grad = ctxFront.createLinearGradient(cx, liquidTopY, cx, bottomY);
+      grad.addColorStop(0, '#f9d56e');
+      grad.addColorStop(1, '#d4a017');
+      ctxFront.fillStyle = grad;
       ctxFront.fillRect(0, liquidTopY, size, bottomY - liquidTopY);
       ctxFront.restore();
       
-      // Обводка поверх
+      // Обводка
       ctxFront.beginPath();
-      ctxFront.arc(cx, cy, radiusPx, 0, 2 * Math.PI);
+      ctxFront.arc(cx, cy, rPx, 0, 2 * Math.PI);
       ctxFront.strokeStyle = '#d4e6f5';
       ctxFront.lineWidth = 2.8;
       ctxFront.stroke();
       
-      // Точная линия уровня (хорда)
-      const yFromCenter = R - h; // расстояние от центра до уровня (положительное если уровень ниже центра)
-      const halfChord = Math.sqrt(Math.max(0, R * R - yFromCenter * yFromCenter)) * scale;
-      
+      // Линия уровня
+      const yFromCenter = R - h;
+      const halfChord = Math.sqrt(Math.max(0, R*R - yFromCenter*yFromCenter)) * scale;
       ctxFront.beginPath();
       ctxFront.moveTo(cx - halfChord, liquidTopY);
       ctxFront.lineTo(cx + halfChord, liquidTopY);
@@ -434,181 +396,151 @@
       ctxFront.lineWidth = 2.5;
       ctxFront.stroke();
       
-      // Иконка
-      ctxFront.font = 'bold 14px "Segoe UI", sans-serif';
-      ctxFront.fillStyle = '#e0eefb';
-      ctxFront.shadowColor = '#00000070';
-      ctxFront.shadowBlur = 6;
-      ctxFront.fillText('⛽', cx - 18, liquidTopY - 8);
+      // Текст с полупрозрачным фоном для читаемости
+      ctxFront.font = 'bold 15px "Segoe UI", sans-serif';
+      ctxFront.textAlign = 'center';
+      
+      const text1 = `${liquidVol.toFixed(2)} м³`;
+      const text2 = `${percentVal.toFixed(1)}%`;
+      const textY1 = cy - 8;
+      const textY2 = cy + 16;
+      
+      // Измеряем ширину текста для фона
+      const metrics1 = ctxFront.measureText(text1);
+      const metrics2 = ctxFront.measureText(text2);
+      const maxWidth = Math.max(metrics1.width, metrics2.width) + 16;
+      
+      // Полупрозрачная подложка
+      ctxFront.fillStyle = '#0a1c2ab0';
+      ctxFront.shadowColor = '#00000000'; // убираем тень у фона
       ctxFront.shadowBlur = 0;
+      ctxFront.beginPath();
+      ctxFront.rect(cx - maxWidth/2, textY1 - 18, maxWidth, 36);
+      ctxFront.fill();
+      
+      // Текст
+      ctxFront.fillStyle = '#ffffff';
+      ctxFront.shadowColor = '#000000b0';
+      ctxFront.shadowBlur = 6;
+      ctxFront.fillText(text1, cx, textY1);
+      ctxFront.fillText(text2, cx, textY2);
+      ctxFront.shadowBlur = 0;
+      ctxFront.textAlign = 'left';
     }
 
     function drawSideCanvas(R, L, h) {
-      const width = 420;
-      const height = 210;
-      const padding = 18;
-      const drawW = width - 2 * padding;
-      const drawH = height - 2 * padding;
+      const width = 400;
+      const height = 200;
+      const pad = 15;
+      const drawW = width - 2 * pad;
+      const drawH = height - 2 * pad;
       const scaleX = drawW / L;
       const scaleY = drawH / (2 * R);
       
       ctxSide.clearRect(0, 0, width, height);
+      
       ctxSide.fillStyle = '#1e3647';
-      ctxSide.fillRect(padding, padding, L * scaleX, 2 * R * scaleY);
+      ctxSide.fillRect(pad, pad, L * scaleX, 2 * R * scaleY);
       
-      const liquidHeightPx = h * scaleY;
-      const liquidY = padding + (2 * R * scaleY) - liquidHeightPx;
+      const liquidH = h * scaleY;
+      const liquidY = pad + (2 * R * scaleY) - liquidH;
       
-      const gradSide = ctxSide.createLinearGradient(padding, liquidY, padding + L * scaleX * 0.5, liquidY + liquidHeightPx);
-      gradSide.addColorStop(0, '#f7d654');
-      gradSide.addColorStop(1, '#c9951e');
-      ctxSide.fillStyle = gradSide;
-      ctxSide.fillRect(padding, liquidY, L * scaleX, liquidHeightPx);
+      const grad = ctxSide.createLinearGradient(pad, liquidY, pad + L*scaleX*0.5, liquidY+liquidH);
+      grad.addColorStop(0, '#f7d654');
+      grad.addColorStop(1, '#c9951e');
+      ctxSide.fillStyle = grad;
+      ctxSide.fillRect(pad, liquidY, L * scaleX, liquidH);
       
       ctxSide.strokeStyle = '#b0c7db';
       ctxSide.lineWidth = 2.2;
-      ctxSide.strokeRect(padding, padding, L * scaleX, 2 * R * scaleY);
+      ctxSide.strokeRect(pad, pad, L * scaleX, 2 * R * scaleY);
       
       ctxSide.beginPath();
-      ctxSide.moveTo(padding, liquidY);
-      ctxSide.lineTo(padding + L * scaleX, liquidY);
+      ctxSide.moveTo(pad, liquidY);
+      ctxSide.lineTo(pad + L * scaleX, liquidY);
       ctxSide.strokeStyle = '#fff9e6';
       ctxSide.lineWidth = 2;
       ctxSide.setLineDash([6, 8]);
       ctxSide.stroke();
       ctxSide.setLineDash([]);
       
-      ctxSide.font = '500 13px "Segoe UI", sans-serif';
+      ctxSide.font = '500 12px "Segoe UI", sans-serif';
       ctxSide.fillStyle = '#c5d9ee';
-      ctxSide.fillText(`L = ${L.toFixed(2)} м`, padding + 12, padding + 24);
+      ctxSide.fillText(`L = ${L.toFixed(2)} м`, pad + 10, pad + 20);
     }
 
-    function updateAllFromState() {
+    function updateUI() {
       const R = radius;
       const maxH = 2 * R;
       
       diameterDisplay.value = maxH.toFixed(3) + ' м';
       levelSlider.max = maxH;
       
-      // Скорректируем уровень, если выходит за границы
       if (level > maxH) level = maxH;
       if (level < 0) level = 0;
       levelSlider.value = level;
       levelDisplay.textContent = level.toFixed(3) + ' м';
       
-      const { liquidVolume, fullVolume, percent } = calculateVolumes();
-      volumeSpan.textContent = liquidVolume.toFixed(3);
+      const { liquid, full, percent } = calculateVolumes();
+      volumeSpan.textContent = liquid.toFixed(3);
       percentSpan.textContent = percent.toFixed(1);
-      fullVolumeSpan.textContent = fullVolume.toFixed(3);
+      fullVolumeSpan.textContent = full.toFixed(3);
       sideLengthLabel.textContent = length.toFixed(2);
       
-      drawFrontCanvas(R, level);
+      drawFrontCanvas(R, level, liquid, percent);
       drawSideCanvas(R, length, level);
     }
 
-    // --- Новые обработчики ввода с поддержкой временно пустого поля ---
-    function validateAndSetRadius(val, sourceInput) {
-      if (val === '') {
-        sourceInput.classList.add('invalid');
-        return false;
-      }
+    // Валидация
+    function validateRadius(val, input) {
+      if (val === '') { input.classList.add('invalid'); return false; }
       const num = parseFloat(val);
-      if (isNaN(num) || num < 0.1) {
-        sourceInput.classList.add('invalid');
-        return false;
-      }
-      sourceInput.classList.remove('invalid');
+      if (isNaN(num) || num < 0.1) { input.classList.add('invalid'); return false; }
+      input.classList.remove('invalid');
       radius = Math.min(10, num);
       return true;
     }
-
-    function validateAndSetLength(val, sourceInput) {
-      if (val === '') {
-        sourceInput.classList.add('invalid');
-        return false;
-      }
+    function validateLength(val, input) {
+      if (val === '') { input.classList.add('invalid'); return false; }
       const num = parseFloat(val);
-      if (isNaN(num) || num < 0.1) {
-        sourceInput.classList.add('invalid');
-        return false;
-      }
-      sourceInput.classList.remove('invalid');
+      if (isNaN(num) || num < 0.1) { input.classList.add('invalid'); return false; }
+      input.classList.remove('invalid');
       length = Math.min(50, num);
       return true;
     }
 
-    function handleRadiusInput(e) {
-      const input = e.target;
-      if (validateAndSetRadius(input.value, input)) {
-        // обновим всё
-        if (level > 2 * radius) level = 2 * radius;
-        updateAllFromState();
+    radiusInput.addEventListener('input', (e) => {
+      if (validateRadius(e.target.value, e.target)) { 
+        if (level > 2*radius) level = 2*radius;
+        updateUI(); 
       }
-      // иначе не меняем состояние, но и поле не трогаем (пусть остаётся как ввёл)
-    }
-
-    function handleLengthInput(e) {
-      const input = e.target;
-      if (validateAndSetLength(input.value, input)) {
-        updateAllFromState();
-      }
-    }
-
-    function handleRadiusBlur(e) {
-      const input = e.target;
-      if (!validateAndSetRadius(input.value, input)) {
-        // восстановим корректное значение
-        input.value = radius.toFixed(2);
-        input.classList.remove('invalid');
-      } else {
-        input.value = radius.toFixed(2);
-      }
-      // после восстановления пересчитаем на всякий случай
-      updateAllFromState();
-    }
-
-    function handleLengthBlur(e) {
-      const input = e.target;
-      if (!validateAndSetLength(input.value, input)) {
-        input.value = length.toFixed(2);
-        input.classList.remove('invalid');
-      } else {
-        input.value = length.toFixed(2);
-      }
-      updateAllFromState();
-    }
-
-    function handleSliderChange() {
+    });
+    lengthInput.addEventListener('input', (e) => {
+      if (validateLength(e.target.value, e.target)) updateUI();
+    });
+    radiusInput.addEventListener('blur', (e) => {
+      if (!validateRadius(e.target.value, e.target)) { radius = 1.2; }
+      e.target.value = radius.toFixed(2);
+      updateUI();
+    });
+    lengthInput.addEventListener('blur', (e) => {
+      if (!validateLength(e.target.value, e.target)) { length = 4.5; }
+      e.target.value = length.toFixed(2);
+      updateUI();
+    });
+    levelSlider.addEventListener('input', () => {
       level = parseFloat(levelSlider.value);
-      const maxH = 2 * radius;
-      if (level > maxH) level = maxH;
-      if (level < 0) level = 0;
-      levelSlider.value = level;
-      updateAllFromState();
-    }
+      updateUI();
+    });
 
-    // Привязка событий
-    radiusInput.addEventListener('input', handleRadiusInput);
-    lengthInput.addEventListener('input', handleLengthInput);
-    radiusInput.addEventListener('blur', handleRadiusBlur);
-    lengthInput.addEventListener('blur', handleLengthBlur);
-    levelSlider.addEventListener('input', handleSliderChange);
+    // Старт
+    radius = 1.2; length = 4.5; level = 1.0;
+    radiusInput.value = radius.toFixed(1);
+    lengthInput.value = length.toFixed(1);
+    updateUI();
 
-    // Инициализация
-    function initialSync() {
-      radius = 1.2;
-      length = 4.5;
-      level = 1.0;
-      radiusInput.value = radius.toFixed(1);
-      lengthInput.value = length.toFixed(1);
-      levelSlider.value = level;
-      updateAllFromState();
-    }
-    initialSync();
-
-    // Для планшетов: предотвращаем зум при двойном тапе на канвасе (не обязательно)
-    frontCanvas.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
-    sideCanvas.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
+    frontCanvas.addEventListener('touchstart', e => e.preventDefault(), {passive: false});
+    sideCanvas.addEventListener('touchstart', e => e.preventDefault(), {passive: false});
   })();
 </script>
 </body>
