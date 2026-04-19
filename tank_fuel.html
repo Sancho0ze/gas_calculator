@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Калькулятор наполненности цистерны 🛢️</title>
+  
+  <!-- Yandex.Metrika counter -->
+  <script type="text/javascript">
+     (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+     m[i].l=1*new Date();
+     for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+     k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+     (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+     ym(XXXXXXXX, "init", {   // 👈 ЗАМЕНИТЕ XXXXXXXX НА ВАШ НОМЕР СЧЁТЧИКА
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true,
+        webvisor:true
+     });
+  </script>
+  <noscript><div><img src="https://mc.yandex.ru/watch/XXXXXXXX" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+  <!-- /Yandex.Metrika counter -->
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(145deg, #1b2a3a 0%, #16222e 100%);
+      font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+    .card {
+      max-width: 780px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-radius: 40px;
+      padding: 24px 24px 32px;
+      box-shadow: 0 25px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 215, 100, 0.2);
+      transition: all 0.2s;
+    }
+    h1 {
+      margin: 0 0 8px 0;
+      font-weight: 600;
+      font-size: 2rem;
+      color: #1e3c5c;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    h1 span {
+      background: #f7b32b;
+      padding: 4px 14px;
+      border-radius: 60px;
+      font-size: 1rem;
+      color: #0a1c2a;
+      letter-spacing: 0.5px;
+    }
+    .subhead {
+      margin-top: -5px;
+      margin-bottom: 24px;
+      color: #40627c;
+      font-weight: 400;
+      border-left: 4px solid #f7b32b;
+      padding-left: 16px;
+    }
+    .params-panel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px 30px;
+      background: #eef3f8;
+      padding: 18px 20px;
+      border-radius: 32px;
+      margin-bottom: 24px;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.02), 0 6px 10px rgba(0, 0, 0, 0.05);
+    }
+    .param {
+      display: flex;
+      flex-direction: column;
+      min-width: 130px;
+    }
+    .param label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #2c4b6b;
+      margin-bottom: 6px;
+    }
+    .param input {
+      background: white;
+      border: 1px solid #bdd1e0;
+      border-radius: 48px;
+      padding: 12px 16px;
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: #0f2838;
+      box-shadow: 0 2px 3px rgba(0,0,0,0.03);
+      transition: 0.15s;
+      width: 100%;
+      outline: none;
+      font-family: inherit;
+    }
+    .param input:focus {
+      border-color: #f7b32b;
+      box-shadow: 0 0 0 3px rgba(247, 179, 43, 0.2);
+    }
+    .param input.invalid {
+      border-color: #e03a3a;
+      box-shadow: 0 0 0 3px rgba(224, 58, 58, 0.15);
+    }
+    .param input[type=number] {
+      -moz-appearance: textfield;
+    }
+    .param input[type=number]::-webkit-outer-spin-button,
+    .param input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    /* readonly поле для диаметра */
+    .param input[readonly] {
+      background: #e2eaf2;
+      border-color: #a6bbce;
+      color: #1e3c5c;
+      cursor: default;
+    }
+
+    /* Слайдер */
+    .level-slider-area {
+      margin: 10px 0 16px;
+    }
+    .level-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+    .level-header label {
+      font-weight: 600;
+      color: #1e3c5c;
+      font-size: 1.3rem;
+    }
+    .level-value-badge {
+      background: #0a1c2a;
+      padding: 6px 16px;
+      border-radius: 40px;
+      color: #ffd966;
+      font-weight: 700;
+      font-size: 1.4rem;
+      box-shadow: inset 0 1px 3px #00000033, 0 4px 6px #0000001a;
+    }
+    input[type=range] {
+      width: 100%;
+      margin: 10px 0;
+      -webkit-appearance: none;
+      background: transparent;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      height: 12px;
+      background: #ced9e3;
+      border-radius: 30px;
+      box-shadow: inset 0 1px 4px #0f1e2b33;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 36px;
+      width: 36px;
+      border-radius: 36px;
+      background: #f7b32b;
+      margin-top: -12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 0 0 4px rgba(247, 179, 43, 0.2);
+      border: 2px solid white;
+      cursor: grab;
+      transition: 0.1s;
+    }
+    input[type=range]::-moz-range-track {
+      height: 12px;
+      background: #ced9e3;
+      border-radius: 30px;
+    }
+    input[type=range]::-moz-range-thumb {
+      height: 36px;
+      width: 36px;
+      border-radius: 36px;
+      background: #f7b32b;
+      border: 2px solid white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      cursor: grab;
+    }
+
+    .viz-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin: 20px 0 16px;
+    }
+    .canvas-box {
+      background: #102331;
+      border-radius: 28px;
+      padding: 12px;
+      box-shadow: inset 0 0 0 1px #3a556b, 0 10px 18px #00000033;
+      text-align: center;
+    }
+    .canvas-box p {
+      margin: 8px 0 0;
+      color: #bdd1e0;
+      font-weight: 500;
+      font-size: 0.9rem;
+      letter-spacing: 0.3px;
+    }
+    canvas {
+      display: block;
+      margin: 0 auto;
+      border-radius: 18px;
+      background: #0e1c26;
+      width: 100%;
+      height: auto;
+      max-width: 300px;
+      aspect-ratio: 1/1;
+      touch-action: none;
+    }
+    #sideCanvas {
+      aspect-ratio: 2 / 1;
+      max-width: 420px;
+    }
+
+    .results {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+    .result-card {
+      background: #1e3c5c;
+      border-radius: 28px;
+      padding: 16px 22px;
+      flex: 1 1 160px;
+      color: white;
+      box-shadow: 0 10px 12px #0000002e;
+    }
+    .result-card .label {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      text-transform: uppercase;
+    }
+    .result-card .value {
+      font-size: 2.4rem;
+      font-weight: 800;
+      line-height: 1.2;
+      color: #ffda7c;
+    }
+    .result-card .unit {
+      font-size: 1rem;
+      font-weight: 400;
+      margin-left: 6px;
+      opacity: 0.8;
+    }
+    .footnote {
+      text-align: right;
+      margin-top: 18px;
+      color: #5f7e9c;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <h1>
+    🛢️ Цистерна
+    <span>бензин</span>
+  </h1>
+  <div class="subhead">Горизонтальный цилиндр · плоские днища</div>
+
+  <div class="params-panel">
+    <div class="param">
+      <label>📏 Радиус R (м)</label>
+      <input type="number" id="radiusInput" min="0.1" max="10" step="0.1" value="1.2" inputmode="decimal">
+    </div>
+    <div class="param">
+      <label>📐 Длина L (м)</label>
+      <input type="number" id="lengthInput" min="0.1" max="50" step="0.1" value="4.5" inputmode="decimal">
+    </div>
+    <div class="param">
+      <label>⚡ Макс. уровень (диаметр)</label>
+      <input type="text" id="diameterDisplay" readonly tabindex="-1">
+    </div>
+  </div>
+
+  <div class="level-slider-area">
+    <div class="level-header">
+      <label>⛽ Уровень бензина</label>
+      <div class="level-value-badge" id="levelDisplay">0.00 м</div>
+    </div>
+    <input type="range" id="levelSlider" min="0" max="2.4" step="0.001" value="1.0" aria-label="Уровень топлива, регулируйте пальцем">
+  </div>
+
+  <div class="viz-container">
+    <div class="canvas-box">
+      <canvas id="frontCanvas" width="300" height="300"></canvas>
+      <p>🔵 Поперечный разрез</p>
+    </div>
+    <div class="canvas-box">
+      <canvas id="sideCanvas" width="420" height="210"></canvas>
+      <p>⬅️ Вид сбоку (L = <span id="sideLengthLabel">4.5</span> м)</p>
+    </div>
+  </div>
+
+  <div class="results">
+    <div class="result-card">
+      <div class="label">Объём бензина</div>
+      <div class="value"><span id="volumeValue">0.00</span><span class="unit">м³</span></div>
+    </div>
+    <div class="result-card">
+      <div class="label">Заполнено</div>
+      <div class="value"><span id="percentValue">0.0</span><span class="unit">%</span></div>
+    </div>
+    <div class="result-card">
+      <div class="label">Полный объём</div>
+      <div class="value"><span id="fullVolumeValue">0.00</span><span class="unit">м³</span></div>
+    </div>
+  </div>
+  <div class="footnote">
+    ⚡ Двигайте ползунок — пальцем удобно
+  </div>
+</div>
+
+<script>
+  (function() {
+    "use strict";
+
+    // DOM элементы
+    const radiusInput = document.getElementById('radiusInput');
+    const lengthInput = document.getElementById('lengthInput');
+    const diameterDisplay = document.getElementById('diameterDisplay');
+    const levelSlider = document.getElementById('levelSlider');
+    const levelDisplay = document.getElementById('levelDisplay');
+    const volumeSpan = document.getElementById('volumeValue');
+    const percentSpan = document.getElementById('percentValue');
+    const fullVolumeSpan = document.getElementById('fullVolumeValue');
+    const sideLengthLabel = document.getElementById('sideLengthLabel');
+    const frontCanvas = document.getElementById('frontCanvas');
+    const sideCanvas = document.getElementById('sideCanvas');
+    const ctxFront = frontCanvas.getContext('2d');
+    const ctxSide = sideCanvas.getContext('2d');
+
+    // Состояние (корректные значения)
+    let radius = 1.2;
+    let length = 4.5;
+    let level = 1.0;
+
+    // Вспомогательные функции
+    function segmentArea(R, h) {
+      if (h <= 0) return 0;
+      if (h >= 2 * R) return Math.PI * R * R;
+      const y = R - h;
+      const acosArg = y / R;
+      const clamped = Math.min(1, Math.max(-1, acosArg));
+      return R * R * Math.acos(clamped) - y * Math.sqrt(Math.max(0, R * R - y * y));
+    }
+
+    function calculateVolumes() {
+      const R = radius;
+      const L = length;
+      const h = Math.min(level, 2 * R);
+      const area = segmentArea(R, h);
+      const liquidVolume = area * L;
+      const fullVolume = Math.PI * R * R * L;
+      const percent = fullVolume > 0 ? (liquidVolume / fullVolume) * 100 : 0;
+      return { liquidVolume, fullVolume, percent };
+    }
+
+    // Отрисовка поперечного разреза (с точной линией уровня)
+    function drawFrontCanvas(R, h) {
+      const size = 300;
+      const padding = 20;
+      const drawableSize = size - 2 * padding;
+      const scale = drawableSize / (2 * R);
+      
+      ctxFront.clearRect(0, 0, size, size);
+      const cx = size / 2;
+      const cy = size / 2;
+      const radiusPx = R * scale;
+      
+      // Фон бака
+      ctxFront.beginPath();
+      ctxFront.arc(cx, cy, radiusPx, 0, 2 * Math.PI);
+      ctxFront.fillStyle = '#1e3647';
+      ctxFront.fill();
+      ctxFront.strokeStyle = '#6b8fa7';
+      ctxFront.lineWidth = 2.5;
+      ctxFront.stroke();
+      
+      // Заливка жидкости (клип по окружности)
+      const bottomY = cy + radiusPx;
+      const liquidHeightPx = h * scale;
+      const liquidTopY = bottomY - liquidHeightPx;
+      
+      ctxFront.save();
+      ctxFront.beginPath();
+      ctxFront.arc(cx, cy, radiusPx, 0, 2 * Math.PI);
+      ctxFront.clip();
+      
+      const gradient = ctxFront.createLinearGradient(cx, liquidTopY, cx, bottomY);
+      gradient.addColorStop(0, '#f9d56e');
+      gradient.addColorStop(1, '#d4a017');
+      ctxFront.fillStyle = gradient;
+      ctxFront.fillRect(0, liquidTopY, size, bottomY - liquidTopY);
+      ctxFront.restore();
+      
+      // Обводка поверх
+      ctxFront.beginPath();
+      ctxFront.arc(cx, cy, radiusPx, 0, 2 * Math.PI);
+      ctxFront.strokeStyle = '#d4e6f5';
+      ctxFront.lineWidth = 2.8;
+      ctxFront.stroke();
+      
+      // Точная линия уровня (хорда)
+      const yFromCenter = R - h; // расстояние от центра до уровня (положительное если уровень ниже центра)
+      const halfChord = Math.sqrt(Math.max(0, R * R - yFromCenter * yFromCenter)) * scale;
+      
+      ctxFront.beginPath();
+      ctxFront.moveTo(cx - halfChord, liquidTopY);
+      ctxFront.lineTo(cx + halfChord, liquidTopY);
+      ctxFront.strokeStyle = '#ffffffcc';
+      ctxFront.lineWidth = 2.5;
+      ctxFront.stroke();
+      
+      // Иконка
+      ctxFront.font = 'bold 14px "Segoe UI", sans-serif';
+      ctxFront.fillStyle = '#e0eefb';
+      ctxFront.shadowColor = '#00000070';
+      ctxFront.shadowBlur = 6;
+      ctxFront.fillText('⛽', cx - 18, liquidTopY - 8);
+      ctxFront.shadowBlur = 0;
+    }
+
+    function drawSideCanvas(R, L, h) {
+      const width = 420;
+      const height = 210;
+      const padding = 18;
+      const drawW = width - 2 * padding;
+      const drawH = height - 2 * padding;
+      const scaleX = drawW / L;
+      const scaleY = drawH / (2 * R);
+      
+      ctxSide.clearRect(0, 0, width, height);
+      ctxSide.fillStyle = '#1e3647';
+      ctxSide.fillRect(padding, padding, L * scaleX, 2 * R * scaleY);
+      
+      const liquidHeightPx = h * scaleY;
+      const liquidY = padding + (2 * R * scaleY) - liquidHeightPx;
+      
+      const gradSide = ctxSide.createLinearGradient(padding, liquidY, padding + L * scaleX * 0.5, liquidY + liquidHeightPx);
+      gradSide.addColorStop(0, '#f7d654');
+      gradSide.addColorStop(1, '#c9951e');
+      ctxSide.fillStyle = gradSide;
+      ctxSide.fillRect(padding, liquidY, L * scaleX, liquidHeightPx);
+      
+      ctxSide.strokeStyle = '#b0c7db';
+      ctxSide.lineWidth = 2.2;
+      ctxSide.strokeRect(padding, padding, L * scaleX, 2 * R * scaleY);
+      
+      ctxSide.beginPath();
+      ctxSide.moveTo(padding, liquidY);
+      ctxSide.lineTo(padding + L * scaleX, liquidY);
+      ctxSide.strokeStyle = '#fff9e6';
+      ctxSide.lineWidth = 2;
+      ctxSide.setLineDash([6, 8]);
+      ctxSide.stroke();
+      ctxSide.setLineDash([]);
+      
+      ctxSide.font = '500 13px "Segoe UI", sans-serif';
+      ctxSide.fillStyle = '#c5d9ee';
+      ctxSide.fillText(`L = ${L.toFixed(2)} м`, padding + 12, padding + 24);
+    }
+
+    function updateAllFromState() {
+      const R = radius;
+      const maxH = 2 * R;
+      
+      diameterDisplay.value = maxH.toFixed(3) + ' м';
+      levelSlider.max = maxH;
+      
+      // Скорректируем уровень, если выходит за границы
+      if (level > maxH) level = maxH;
+      if (level < 0) level = 0;
+      levelSlider.value = level;
+      levelDisplay.textContent = level.toFixed(3) + ' м';
+      
+      const { liquidVolume, fullVolume, percent } = calculateVolumes();
+      volumeSpan.textContent = liquidVolume.toFixed(3);
+      percentSpan.textContent = percent.toFixed(1);
+      fullVolumeSpan.textContent = fullVolume.toFixed(3);
+      sideLengthLabel.textContent = length.toFixed(2);
+      
+      drawFrontCanvas(R, level);
+      drawSideCanvas(R, length, level);
+    }
+
+    // --- Новые обработчики ввода с поддержкой временно пустого поля ---
+    function validateAndSetRadius(val, sourceInput) {
+      if (val === '') {
+        sourceInput.classList.add('invalid');
+        return false;
+      }
+      const num = parseFloat(val);
+      if (isNaN(num) || num < 0.1) {
+        sourceInput.classList.add('invalid');
+        return false;
+      }
+      sourceInput.classList.remove('invalid');
+      radius = Math.min(10, num);
+      return true;
+    }
+
+    function validateAndSetLength(val, sourceInput) {
+      if (val === '') {
+        sourceInput.classList.add('invalid');
+        return false;
+      }
+      const num = parseFloat(val);
+      if (isNaN(num) || num < 0.1) {
+        sourceInput.classList.add('invalid');
+        return false;
+      }
+      sourceInput.classList.remove('invalid');
+      length = Math.min(50, num);
+      return true;
+    }
+
+    function handleRadiusInput(e) {
+      const input = e.target;
+      if (validateAndSetRadius(input.value, input)) {
+        // обновим всё
+        if (level > 2 * radius) level = 2 * radius;
+        updateAllFromState();
+      }
+      // иначе не меняем состояние, но и поле не трогаем (пусть остаётся как ввёл)
+    }
+
+    function handleLengthInput(e) {
+      const input = e.target;
+      if (validateAndSetLength(input.value, input)) {
+        updateAllFromState();
+      }
+    }
+
+    function handleRadiusBlur(e) {
+      const input = e.target;
+      if (!validateAndSetRadius(input.value, input)) {
+        // восстановим корректное значение
+        input.value = radius.toFixed(2);
+        input.classList.remove('invalid');
+      } else {
+        input.value = radius.toFixed(2);
+      }
+      // после восстановления пересчитаем на всякий случай
+      updateAllFromState();
+    }
+
+    function handleLengthBlur(e) {
+      const input = e.target;
+      if (!validateAndSetLength(input.value, input)) {
+        input.value = length.toFixed(2);
+        input.classList.remove('invalid');
+      } else {
+        input.value = length.toFixed(2);
+      }
+      updateAllFromState();
+    }
+
+    function handleSliderChange() {
+      level = parseFloat(levelSlider.value);
+      const maxH = 2 * radius;
+      if (level > maxH) level = maxH;
+      if (level < 0) level = 0;
+      levelSlider.value = level;
+      updateAllFromState();
+    }
+
+    // Привязка событий
+    radiusInput.addEventListener('input', handleRadiusInput);
+    lengthInput.addEventListener('input', handleLengthInput);
+    radiusInput.addEventListener('blur', handleRadiusBlur);
+    lengthInput.addEventListener('blur', handleLengthBlur);
+    levelSlider.addEventListener('input', handleSliderChange);
+
+    // Инициализация
+    function initialSync() {
+      radius = 1.2;
+      length = 4.5;
+      level = 1.0;
+      radiusInput.value = radius.toFixed(1);
+      lengthInput.value = length.toFixed(1);
+      levelSlider.value = level;
+      updateAllFromState();
+    }
+    initialSync();
+
+    // Для планшетов: предотвращаем зум при двойном тапе на канвасе (не обязательно)
+    frontCanvas.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
+    sideCanvas.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
+  })();
+</script>
+</body>
+</html>
