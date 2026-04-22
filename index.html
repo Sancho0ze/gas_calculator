@@ -1,776 +1,608 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Калькулятор топлива 🛢️</title>
-  
-  <!-- Yandex.Metrika counter -->
-  <script type="text/javascript">
-      (function(m,e,t,r,i,k,a){
-          m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-          m[i].l=1*new Date();
-          for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-          k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-      })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=108668299', 'ym');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Калькулятор топлива 🛢️</title>
+    <meta name="theme-color" content="#000000">
+    <link rel="manifest" href="manifest.json">
 
-      ym(108668299, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-  </script>
-  <noscript><div><img src="https://mc.yandex.ru/watch/108668299" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-  <!-- /Yandex.Metrika counter -->
+    <!-- Yandex.Metrika -->
+    <script type="text/javascript">
+        (function (m, e, t, r, i, k, a) {
+            m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+            m[i].l = 1 * new Date();
+            for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
+            k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+        })
+            (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+        ym(108668299, "init", { ssr: true, webvisor: true, clickmap: true, ecommerce: "dataLayer", accurateTrackBounce: true, trackLinks: true });
+    </script>
+    <noscript>
+        <div><img src="https://mc.yandex.ru/watch/108668299" style="position:absolute; left:-9999px;" alt="" /></div>
+    </noscript>
 
-  <style>
-    :root {
-      --bg: #000;
-      --card-bg: rgba(20,20,25,0.5);
-      --card-border: rgba(255,255,255,0.05);
-      --text: #fff;
-      --text-dim: rgba(255,255,255,0.5);
-      --text-mid: rgba(255,255,255,0.7);
-      --input-bg: rgba(255,255,255,0.06);
-      --input-border: rgba(255,255,255,0.15);
-      --accent: #f7b32b;
-      --canvas-bg: rgba(20,20,25,0.6);
-      --slider-track: rgba(255,255,255,0.35);
-    }
-    [data-theme="light"] {
-      --bg: #f5f7fa;
-      --card-bg: rgba(255,255,255,0.85);
-      --card-border: rgba(0,0,0,0.08);
-      --text: #1a1a2e;
-      --text-dim: rgba(0,0,0,0.45);
-      --text-mid: rgba(0,0,0,0.65);
-      --input-bg: rgba(0,0,0,0.04);
-      --input-border: rgba(0,0,0,0.12);
-      --accent: #e6a225;
-      --canvas-bg: rgba(240,242,245,0.8);
-      --slider-track: rgba(0,0,0,0.25);
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      min-height: 100vh;
-      background: var(--bg);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      transition: background 0.3s;
-    }
-    .card {
-      max-width: 960px; width: 100%;
-      background: var(--card-bg);
-      backdrop-filter: blur(30px);
-      border-radius: 48px;
-      padding: 36px 36px 28px;
-      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-      border: 1px solid var(--card-border);
-      color: var(--text);
-    }
-    .header {
-      display: flex; justify-content: space-between;
-      align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;
-    }
-    .controls { display: flex; gap: 8px; align-items: center; }
-    .theme-btn {
-      border: none; background: transparent; padding: 8px 14px;
-      border-radius: 60px; font-size: 0.9rem; font-weight: 500;
-      color: var(--text-mid); cursor: pointer; transition: all 0.2s;
-    }
-    .lang-switch-inner {
-      display: flex; gap: 4px; background: rgba(128,128,128,0.12);
-      padding: 4px; border-radius: 60px; border: 0.5px solid var(--card-border);
-      cursor: pointer;
-      user-select: none;
-    }
-    .lang-btn {
-      flex: 1; text-align: center;
-      border: none; background: transparent;
-      padding: 6px 12px; border-radius: 50px;
-      font-size: 0.85rem; font-weight: 500;
-      color: var(--text-mid); cursor: pointer; transition: all 0.2s;
-    }
-    .lang-btn.active {
-      background: var(--accent); color: #000; font-weight: 600;
-    }
-    h1 {
-      margin: 0; font-weight: 600; font-size: 3.2rem;
-      letter-spacing: -0.04em; color: var(--text);
-      display: flex; align-items: center; gap: 16px; flex: 1;
-    }
-    h1 span {
-      background: rgba(128,128,128,0.12); backdrop-filter: blur(5px);
-      padding: 8px 22px; border-radius: 100px; font-size: 1.2rem;
-      font-weight: 500; color: var(--text); border: 0.5px solid var(--card-border);
-    }
-    .params-panel {
-      display: flex; flex-wrap: wrap; gap: 20px 30px; margin: 20px 0 0;
-    }
-    .param {
-      display: flex; flex-direction: column;
-      min-width: 150px; flex: 1 0 130px;
-    }
-    .param label {
-      font-size: 0.8rem; font-weight: 500; text-transform: uppercase;
-      letter-spacing: 0.6px; color: var(--text-dim); margin-bottom: 8px;
-    }
-    .param input {
-      background: var(--input-bg); border: 0.5px solid var(--input-border);
-      border-radius: 24px; padding: 14px 18px; font-size: 1.3rem;
-      font-weight: 500; color: var(--text); outline: none; width: 100%;
-    }
-    .param input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 4px rgba(247,179,43,0.2);
-    }
-    .param input[readonly] {
-      background: rgba(128,128,128,0.06);
-      border-color: var(--card-border); color: var(--text-mid);
-    }
-    input[type="number"] {
-      -moz-appearance: textfield;
-    }
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-      -webkit-appearance: inner-spin-button !important;
-      opacity: 1 !important;
-      filter: invert(1) !important;
-      background: transparent !important;
-      border: none !important;
-      margin: 0 !important;
-    }
-    input[type="number"]:hover::-webkit-inner-spin-button,
-    input[type="number"]:hover::-webkit-outer-spin-button {
-      filter: invert(1) brightness(1.2) !important;
-    }
-    .radius-type-row {
-      display: flex; align-items: center; gap: 28px;
-      flex-wrap: wrap; margin: 20px 0 12px;
-    }
-    .radio-group { display: flex; gap: 24px; }
-    .radio-group label {
-      display: flex; align-items: center; gap: 8px;
-      font-size: 1.1rem; color: var(--text); cursor: pointer;
-    }
-    .wall-thickness {
-      display: flex; align-items: center; gap: 16px;
-      background: rgba(128,128,128,0.08); padding: 8px 20px 8px 24px;
-      border-radius: 60px; border: 0.5px solid var(--card-border);
-    }
-    .wall-thickness label {
-      font-size: 1rem; font-weight: 500; color: var(--text-mid);
-    }
-    .wall-thickness input {
-      width: 80px; background: rgba(0,0,0,0.15);
-      border: 0.5px solid var(--input-border); border-radius: 30px;
-      padding: 10px 12px; font-size: 1rem; text-align: center;
-      color: var(--text); outline: none;
-    }
-    .wall-thickness input:disabled { opacity: 0.4; }
-    .wall-thickness span { font-size: 0.95rem; color: var(--text-dim); }
-    .level-section { margin: 12px 0 24px; }
-    .level-row {
-      display: flex; justify-content: space-between;
-      align-items: center; margin-bottom: 12px;
-    }
-    .level-row h2 {
-      font-size: 1.5rem; font-weight: 500; color: var(--text);
-    }
-    .full-volume-badge {
-      background: rgba(0,0,0,0.3); backdrop-filter: blur(15px);
-      border-radius: 60px; padding: 10px 24px;
-      border: 0.5px solid var(--card-border);
-      display: flex; align-items: center; gap: 10px;
-    }
-    .full-volume-badge .label {
-      font-size: 0.95rem; font-weight: 500; color: var(--text-mid);
-    }
-    .full-volume-badge .value {
-      font-size: 1.8rem; font-weight: 600; color: var(--accent);
-    }
-    .full-volume-badge .unit {
-      font-size: 0.95rem; margin-left: 4px; color: var(--text-dim);
-    }
-    .level-control-row {
-      display: flex; justify-content: space-between;
-      align-items: center; margin: 16px 0 8px;
-    }
-    .hint-text { font-size: 1rem; color: var(--text-dim); }
-    .level-input-box {
-      display: flex; align-items: center;
-      background: rgba(128,128,128,0.08); backdrop-filter: blur(5px);
-      border-radius: 60px; padding: 4px 4px 4px 20px;
-      border: 0.5px solid var(--input-border);
-    }
-    .level-input-box input {
-      width: 95px; border: none; background: transparent;
-      font-size: 1.5rem; font-weight: 600; text-align: right;
-      padding: 8px 4px; color: var(--text); outline: none;
-    }
-    .level-input-box span {
-      font-size: 1.2rem; font-weight: 500;
-      margin-right: 16px; color: var(--text-mid);
-    }
-    input[type=range] {
-      width: 100%; margin: 12px 0 8px;
-      -webkit-appearance: none;
-      background: transparent;
-    }
-    input[type=range]::-webkit-slider-runnable-track {
-      height: 8px;
-      background: var(--slider-track);
-      border-radius: 10px;
-      border: 1px solid rgba(128,128,128,0.2);
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
-    }
-    input[type=range]::-moz-range-track {
-      height: 8px;
-      background: var(--slider-track);
-      border-radius: 10px;
-      border: 1px solid rgba(128,128,128,0.2);
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
-    }
-    input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      height: 32px; width: 32px;
-      border-radius: 50%;
-      background: var(--accent);
-      margin-top: -13px;
-      border: 2px solid var(--text);
-      cursor: grab;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    }
-    input[type=range]::-moz-range-thumb {
-      height: 32px; width: 32px;
-      border-radius: 50%;
-      background: var(--accent);
-      border: 2px solid var(--text);
-      cursor: grab;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    }
-    .results-grid {
-      display: flex; gap: 32px; margin: 30px 0 16px;
-    }
-    .result-item { flex: 1; text-align: center; }
-    .result-item .label {
-      font-size: 0.9rem; font-weight: 500; text-transform: uppercase;
-      color: var(--text-dim); margin-bottom: 8px;
-    }
-    .result-item .value {
-      font-size: 3.8rem; font-weight: 600;
-      letter-spacing: -0.03em; color: var(--text); line-height: 1.1;
-    }
-    .result-item .unit {
-      font-size: 1.4rem; font-weight: 400;
-      color: var(--text-dim); margin-left: 8px;
-    }
-    .weight-row {
-      display: flex; gap: 24px; align-items: center;
-      justify-content: center; margin: 8px 0 20px; flex-wrap: wrap;
-    }
-    .weight-result {
-      font-size: 1.1rem; color: var(--text-mid);
-      display: flex; align-items: center; gap: 8px;
-    }
-    .weight-result .val {
-      font-weight: 600; color: var(--accent); font-size: 1.3rem;
-    }
-    .density-input {
-      display: flex; align-items: center; gap: 8px;
-      background: rgba(128,128,128,0.08); padding: 6px 14px;
-      border-radius: 60px; border: 0.5px solid var(--card-border);
-    }
-    .density-input label {
-      font-size: 0.85rem; color: var(--text-dim);
-    }
-    .density-input input {
-      width: 70px; background: transparent; border: none;
-      color: var(--text); font-size: 1rem; text-align: center; outline: none;
-    }
-    .fuel-presets {
-      display: flex; gap: 8px; flex-wrap: wrap;
-      margin: 12px 0; justify-content: center;
-    }
-    .preset-btn {
-      padding: 6px 14px;
-      background: rgba(128,128,128,0.08);
-      border: 0.5px solid var(--card-border);
-      border-radius: 60px;
-      font-size: 0.85rem;
-      color: var(--text-mid);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .preset-btn:hover, .preset-btn.active {
-      background: var(--accent);
-      color: #000;
-      border-color: var(--accent);
-    }
-    .viz-container {
-      display: flex; flex-direction: row; flex-wrap: wrap;
-      gap: 28px; justify-content: center; margin-top: 8px;
-    }
-    .canvas-box { flex: 1 1 280px; text-align: center; }
-    canvas {
-      display: block; margin: 0 auto 4px; border-radius: 28px;
-      background: var(--canvas-bg); backdrop-filter: blur(5px);
-      width: 100%; height: auto; max-width: 300px; aspect-ratio: 1/1;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-    }
-    #sideCanvas { aspect-ratio: 2/1; max-width: 380px; }
-    .canvas-box p {
-      margin: 0; font-size: 0.95rem;
-      font-weight: 500; color: var(--text-mid);
-    }
-    @media (max-width: 700px) {
-      body { padding: 12px; }
-      .card { padding: 28px 20px 20px; }
-      h1 { font-size: 2.5rem; }
-      .header { flex-direction: column; align-items: flex-start; }
-      .results-grid { gap: 16px; }
-      .result-item .value { font-size: 2.8rem; }
-    }
-  </style>
+    <style>
+        :root {
+            --bg: #000000;
+            --surface: rgba(28, 28, 30, 0.85);
+            --border: rgba(255, 255, 255, 0.12);
+            --text: #ffffff;
+            --text-dim: rgba(235, 235, 245, 0.5);
+            --accent: #ff9500;
+            --r-lg: 20px;
+            --r-md: 12px;
+            --blur: saturate(180%) blur(20px);
+            --shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="light"] {
+            --bg: #f5f5f7;
+            --surface: rgba(255, 255, 255, 0.9);
+            --border: rgba(0, 0, 0, 0.1);
+            --text: #1d1d1f;
+            --text-dim: rgba(60, 60, 67, 0.5);
+            --accent: #ff9500;
+            --shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            justify-content: center;
+            padding: 24px 16px;
+            padding-top: env(safe-area-inset-top, 24px);
+            padding-bottom: env(safe-area-inset-bottom, 24px);
+        }
+
+        .container {
+            max-width: 680px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            align-items: start;
+        }
+
+        header {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            text-align: center;
+            flex: 1;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .pill {
+            display: flex;
+            background: rgba(128, 128, 128, 0.15);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 3px;
+        }
+
+        .pill-btn {
+            border: none;
+            background: transparent;
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pill-btn.active {
+            background: var(--text);
+            color: var(--bg);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .icon-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r-lg);
+            padding: 16px;
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
+            box-shadow: var(--shadow);
+        }
+
+        .panel-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            letter-spacing: -0.01em;
+        }
+
+        .input-row {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+        }
+
+        .field {
+            width: 100%;
+            background: rgba(128, 128, 128, 0.12);
+            border: 1px solid transparent;
+            border-radius: var(--r-md);
+            padding: 10px 12px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text);
+            outline: none;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .field:focus {
+            border-color: var(--accent);
+            background: rgba(128, 128, 128, 0.18);
+        }
+
+        .field[readonly] {
+            background: transparent;
+            border-color: var(--border);
+            color: var(--text-dim);
+            pointer-events: none;
+        }
+
+        .field-sm {
+            max-width: 120px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 16px;
+            margin: 8px 0;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        input[type="radio"] {
+            appearance: none;
+            -moz-appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--text-dim);
+            border-radius: 50%;
+            position: relative;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        input[type="radio"]:checked {
+            border-color: var(--accent);
+            background: var(--accent);
+            box-shadow: inset 0 0 0 3px var(--bg);
+        }
+
+        input[type=range] {
+            width: 100%;
+            margin: 12px 0;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            height: 5px;
+            background: var(--text-dim);
+            border-radius: 10px;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 26px;
+            width: 26px;
+            border-radius: 50%;
+            background: var(--accent);
+            margin-top: -10px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+
+        input[type=range]::-moz-range-track {
+            height: 5px;
+            background: var(--text-dim);
+            border-radius: 10px;
+            border: none;
+        }
+
+        input[type=range]::-moz-range-thumb {
+            height: 26px;
+            width: 26px;
+            border: none;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+
+        input[type=number] {
+            padding-right: 2px;
+        }
+
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button {
+            -webkit-appearance: inner-spin-button;
+            display: flex;
+            width: auto;
+            color: var(--text-dim);
+        }
+
+        input[type=number]:hover::-webkit-outer-spin-button,
+        input[type=number]:hover::-webkit-inner-spin-button {
+            color: var(--text);
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: var(--r-lg);
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        #tankCanvas {
+            aspect-ratio: 4/3;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        .temp-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            align-items: start;
+        }
+
+        .temp-res {
+            background: rgba(128, 128, 128, 0.08);
+            padding: 12px;
+            border-radius: var(--r-md);
+            font-size: 13px;
+            color: var(--text-dim);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .temp-res .v {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .temp-res .d {
+            color: var(--accent);
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .tech-summary {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .tech-summary .arrow {
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .tech-summary.open .arrow {
+            transform: rotate(180deg);
+        }
+
+        .tech-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .tech-summary.open .tech-content {
+            max-height: 600px;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            font-size: 12px;
+            margin-top: 12px;
+        }
+
+        .tech-item {
+            background: rgba(128, 128, 128, 0.06);
+            padding: 10px;
+            border-radius: var(--r-md);
+        }
+
+        .tech-item .l {
+            color: var(--text-dim);
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .tech-item .v {
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .tech-item .desc {
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-top: 6px;
+            line-height: 1.4;
+            border-top: 1px solid var(--border);
+            padding-top: 6px;
+        }
+
+        .presets {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .chip {
+            padding: 5px 10px;
+            background: rgba(128, 128, 128, 0.12);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 12px;
+            color: var(--text-dim);
+            cursor: pointer;
+        }
+
+        .chip.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #000;
+        }
+
+        .adv {
+            display: none;
+        }
+
+        body[data-mode="advanced"] .adv.block {
+            display: block;
+        }
+
+        body[data-mode="advanced"] .adv.flex-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (max-width: 420px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .temp-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tech-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-top {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
 </head>
-<body>
-<div class="card">
-  <div class="header">
-    <h1>🛢️ <span data-i18n="title">Калькулятор топлива</span></h1>
-    <div class="controls">
-      <button class="theme-btn" id="themeBtn" title="Toggle theme">🌓</button>
-      <div class="lang-switch-inner" id="langSwitch">
-        <button class="lang-btn active" data-lang="ru">RU</button>
-        <button class="lang-btn" data-lang="en">EN</button>
-      </div>
+
+<body data-mode="simple">
+    <div class="container">
+        <header>
+            <div class="header-top">
+                <h1 id="appTitle">Калькулятор топлива</h1>
+                <button class="icon-btn" id="themeBtn">🌓</button>
+            </div>
+            <div class="controls">
+                <div class="pill" id="modeSwitch">
+                    <button class="pill-btn active" data-mode="simple">Простой</button>
+                    <button class="pill-btn" data-mode="advanced">Расширенный</button>
+                </div>
+                <div class="pill" id="langSwitch">
+                    <button class="pill-btn active" data-lang="ru">RU</button>
+                    <button class="pill-btn" data-lang="en">EN</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="input-row">
+            <div class="panel">
+                <div class="panel-title" id="tTank">Параметры цистерны</div>
+                <div class="input-group" style="margin-bottom:10px;">
+                    <label id="tR">Радиус R (м)</label>
+                    <input type="number" class="field" id="radiusInput" min="0.1" max="10" step="0.1" value="1.2">
+                </div>
+                <div class="input-group" style="margin-bottom:10px;">
+                    <label id="tL">Длина L (м)</label>
+                    <input type="number" class="field" id="lengthInput" min="0.1" max="50" step="0.1" value="4.5">
+                </div>
+
+                <div class="radio-group">
+                    <label class="radio-label"><input type="radio" name="radiusType" value="inner" checked> <span
+                            id="tInner">Внутренний</span></label>
+                    <label class="radio-label"><input type="radio" name="radiusType" value="outer"> <span
+                            id="tOuter">Наружный</span></label>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+                    <label style="font-size:13px; color:var(--text-dim);" id="tWall">Стенка</label>
+                    <input type="number" class="field field-sm" id="wallInput" min="1" max="500" step="1" value="4"
+                        disabled>
+                    <span style="font-size:12px; color:var(--text-dim);" id="tMM">мм</span>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-title" id="tLevel">Уровень топлива</div>
+                <div class="input-group" style="margin-bottom:10px;">
+                    <label id="tH">Высота жидкости (м)</label>
+                    <input type="number" class="field" id="levelInput" min="0" max="2.4" step="0.05" value="1.0">
+                </div>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                    <label style="font-size:12px; color:var(--text-dim);" id="tMax">Макс. уровень</label>
+                    <input type="text" class="field field-sm" id="maxLevelDisplay" readonly>
+                </div>
+                <input type="range" id="levelSlider" min="0" max="2.4" step="0.05" value="1.0">
+
+                <div class="adv flex-col" style="margin-top:12px;">
+                    <label style="font-size:11px; text-transform:uppercase; color:var(--text-dim); margin-bottom:6px;"
+                        id="tFuel">Тип топлива</label>
+                    <div class="presets" id="presets">
+                        <button class="chip active" data-density="830" data-alpha="0.0008">Дизель</button>
+                        <button class="chip" data-density="750" data-alpha="0.0012">Бензин</button>
+                        <button class="chip" data-density="910" data-alpha="0.0007">Мазут</button>
+                    </div>
+                    <div style="display:flex; gap:8px; margin-top:8px; align-items:center;">
+                        <div class="input-group">
+                            <label id="tDens">Плотность</label>
+                            <input type="number" class="field" id="densityInput" min="100" max="1200" step="10"
+                                value="830">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel adv block">
+                <div class="panel-title" id="tTemp">Температурная коррекция</div>
+                <div class="temp-grid">
+                    <div class="input-group">
+                        <label id="tTempIn">Температура (эталон: 20) (°C)</label>
+                        <input type="number" class="field" id="tempInput" min="-40" max="60" step="1" value="20">
+                    </div>
+                    <div class="temp-res">
+                        <div>Объём при 20°C: <span class="v" id="volRaw">0.00</span> <span id="volUnitRaw">м³</span>
+                        </div>
+                        <div><span id="volCorrLabel">Объём при 20°C</span>: <span class="v" id="volCorr">0.00</span>
+                            <span id="volUnitCorr">м³</span>
+                        </div>
+                        <div class="d" id="volDelta">Δ: +0.00%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:16px;">
+            <canvas id="tankCanvas" width="300" height="225"></canvas>
+
+            <div class="panel tech-summary" id="techSummary">
+                <div class="panel-title" style="margin-bottom:0;">
+                    <span id="tTech">📊 Технические данные</span>
+                    <span class="arrow" style="float:right;">▼</span>
+                </div>
+                <div class="tech-content">
+                    <div class="tech-grid">
+                        <div class="tech-item">
+                            <div class="l" id="tAreaL">Площадь сегмента</div>
+                            <div class="v" id="tArea">0.00 м²</div>
+                            <div class="desc" id="tAreaD">Площадь поперечного сечения, занятого жидкостью.</div>
+                        </div>
+                        <div class="tech-item">
+                            <div class="l" id="tRatioL">Отношение h/D</div>
+                            <div class="v" id="tRatio">0.00</div>
+                            <div class="desc" id="tRatioD">Доля заполнения по высоте.</div>
+                        </div>
+                        <div class="tech-item">
+                            <div class="l" id="tVoidL">Объём пустот</div>
+                            <div class="v" id="tVoid">0.00 м³</div>
+                            <div class="desc" id="tVoidD">Свободное пространство над жидкостью.</div>
+                        </div>
+                        <div class="tech-item">
+                            <div class="l" id="tFillL">Коэф. заполнения</div>
+                            <div class="v" id="tFill">0.00</div>
+                            <div class="desc" id="tFillD">Доля от полного объёма (0.0–1.0).</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div class="params-panel">
-    <div class="param">
-      <label data-i18n="radius">📏 Радиус R (м)</label>
-      <input type="number" id="radiusInput" min="0.1" max="10" step="0.1" value="1.2">
-    </div>
-    <div class="param">
-      <label data-i18n="length">📐 Длина L (м)</label>
-      <input type="number" id="lengthInput" min="0.1" max="50" step="0.1" value="4.5">
-    </div>
-    <div class="param">
-      <label data-i18n="maxLevel">⚡ Макс. уровень</label>
-      <input type="text" id="diameterDisplay" readonly>
-    </div>
-  </div>
-
-  <div class="radius-type-row">
-    <div class="radio-group">
-      <label><input type="radio" name="radiusType" value="inner" checked> <span data-i18n="inner">Внутренний</span></label>
-      <label><input type="radio" name="radiusType" value="outer"> <span data-i18n="outer">Наружный</span></label>
-    </div>
-    <div class="wall-thickness">
-      <label data-i18n="wall">Стенка</label>
-      <input type="number" id="wallThicknessInput" min="1" max="500" step="1" value="4" disabled>
-      <span data-i18n="mm">мм</span>
-    </div>
-  </div>
-
-  <div class="level-section">
-    <div class="level-row">
-      <h2 data-i18n="fuelLevel">⛽ Уровень топлива</h2>
-      <div class="full-volume-badge">
-        <span class="label" data-i18n="full">Полный</span>
-        <span class="value" id="fullVolumeValue">0.00</span>
-        <span class="unit">м³</span>
-      </div>
-    </div>
-    <div class="level-control-row">
-      <span class="hint-text" data-i18n="hint">⚡ двигайте ползунок</span>
-      <div class="level-input-box">
-        <input type="number" id="levelInput" min="0" max="2.4" step="0.05" value="1.0">
-        <span>м</span>
-      </div>
-    </div>
-    <input type="range" id="levelSlider" min="0" max="2.4" step="0.05" value="1.0">
-  </div>
-
-  <div class="results-grid">
-    <div class="result-item">
-      <div class="label" data-i18n="volume">Объём</div>
-      <div class="value"><span id="volumeValue">0.00</span><span class="unit">м³</span></div>
-    </div>
-    <div class="result-item">
-      <div class="label" data-i18n="filled">Заполнено</div>
-      <div class="value"><span id="percentValue">0.0</span><span class="unit">%</span></div>
-    </div>
-  </div>
-
-  <div class="fuel-presets">
-    <button class="preset-btn active" data-density="830">Дизель</button>
-    <button class="preset-btn" data-density="750">Бензин</button>
-    <button class="preset-btn" data-density="910">Мазут</button>
-    <button class="preset-btn" data-density="800">Керосин</button>
-  </div>
-
-  <div class="weight-row">
-    <div class="density-input">
-      <label data-i18n="density">⚖️ Плотность</label>
-      <input type="number" id="densityInput" min="100" max="1200" step="10" value="830">
-      <span>кг/м³</span>
-    </div>
-    <div class="weight-result">
-      <span data-i18n="mass">Масса:</span>
-      <span class="val" id="weightValue">0</span>
-      <span>кг</span>
-    </div>
-  </div>
-
-  <div class="viz-container">
-    <div class="canvas-box">
-      <canvas id="frontCanvas" width="300" height="300"></canvas>
-      <p data-i18n="cross">🔵 Поперечный разрез</p>
-    </div>
-    <div class="canvas-box">
-      <canvas id="sideCanvas" width="400" height="200"></canvas>
-      <p>⬅️ <span data-i18n="side">Вид сбоку</span> (L = <span id="sideLengthLabel">4.5</span> м)</p>
-    </div>
-  </div>
-</div>
-
-<script>
-(function() {
-  const translations = {
-    ru: {
-      title: 'Калькулятор топлива',
-      radius: '📏 Радиус R (м)',
-      length: '📐 Длина L (м)',
-      maxLevel: '⚡ Макс. уровень',
-      inner: 'Внутренний',
-      outer: 'Наружный',
-      wall: 'Стенка',
-      mm: 'мм',
-      fuelLevel: '⛽ Уровень топлива',
-      full: 'Полный',
-      hint: '⚡ двигайте ползунок',
-      volume: 'Объём',
-      filled: 'Заполнено',
-      density: '⚖️ Плотность',
-      mass: 'Масса:',
-      cross: '🔵 Поперечный разрез',
-      side: 'Вид сбоку'
-    },
-    en: {
-      title: 'Fuel Calculator',
-      radius: '📏 Radius R (m)',
-      length: '📐 Length L (m)',
-      maxLevel: '⚡ Max level',
-      inner: 'Inner',
-      outer: 'Outer',
-      wall: 'Wall',
-      mm: 'mm',
-      fuelLevel: '⛽ Fuel level',
-      full: 'Full',
-      hint: '⚡ slide to adjust',
-      volume: 'Volume',
-      filled: 'Filled',
-      density: '⚖️ Density',
-      mass: 'Weight:',
-      cross: '🔵 Cross section',
-      side: 'Side view'
-    }
-  };
-
-  let currentLang = 'ru';
-  
-  function applyLanguage(lang) {
-    currentLang = lang;
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      const key = el.getAttribute('data-i18n');
-      if (translations[lang] && translations[lang][key]) {
-        el.textContent = translations[lang][key];
-      }
-    });
-    document.title = translations[lang].title + ' 🛢️';
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.lang === lang);
-    });
-  }
-
-  const radiusInput = document.getElementById('radiusInput');
-  const lengthInput = document.getElementById('lengthInput');
-  const diameterDisplay = document.getElementById('diameterDisplay');
-  const levelSlider = document.getElementById('levelSlider');
-  const levelInput = document.getElementById('levelInput');
-  const volumeSpan = document.getElementById('volumeValue');
-  const percentSpan = document.getElementById('percentValue');
-  const fullVolumeSpan = document.getElementById('fullVolumeValue');
-  const sideLengthLabel = document.getElementById('sideLengthLabel');
-  const densityInput = document.getElementById('densityInput');
-  const weightValue = document.getElementById('weightValue');
-  const themeBtn = document.getElementById('themeBtn');
-  const langSwitch = document.getElementById('langSwitch');
-  const frontCanvas = document.getElementById('frontCanvas');
-  const sideCanvas = document.getElementById('sideCanvas');
-  const ctxFront = frontCanvas.getContext('2d');
-  const ctxSide = sideCanvas.getContext('2d');
-
-  let radius = 1.2;
-  let length = 4.5;
-  let level = 1.0;
-  let isOuter = false;
-  let wallThicknessMM = 4;
-  let animFrame = null;
-
-  let currentTheme = localStorage.getItem('theme') || 'dark';
-  function setTheme(theme) {
-    currentTheme = theme;
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-    themeBtn.textContent = theme === 'dark' ? '🌓' : '☀️';
-  }
-  themeBtn.addEventListener('click', () => setTheme(currentTheme === 'dark' ? 'light' : 'dark'));
-  setTheme(currentTheme);
-
-  langSwitch.addEventListener('click', () => {
-    const newLang = currentLang === 'ru' ? 'en' : 'ru';
-    applyLanguage(newLang);
-  });
-
-  function getInnerRadius() {
-    if (isOuter) {
-      return Math.max(0.001, radius - wallThicknessMM / 1000);
-    }
-    return radius;
-  }
-
-  function segmentArea(R, h) {
-    if (h <= 0) return 0;
-    if (h >= 2 * R) return Math.PI * R * R;
-    const y = R - h;
-    const acosArg = Math.min(1, Math.max(-1, y / R));
-    return R * R * Math.acos(acosArg) - y * Math.sqrt(Math.max(0, R*R - y*y));
-  }
-
-  function calculate() {
-    const R = getInnerRadius();
-    const maxH = 2 * R;
-    const h = Math.min(level, maxH);
-    const area = segmentArea(R, h);
-    const liquid = area * length;
-    const full = Math.PI * R * R * length;
-    const percent = full > 0 ? (liquid / full) * 100 : 0;
-    return { liquid, full, percent, R, h, maxH };
-  }
-
-  function drawFront(R, h, liquidVol, percentVal) {
-    const size = 300, padding = 16;
-    const scale = (size - 2 * padding) / (2 * R);
-    const cx = size/2, cy = size/2, rPx = R * scale;
-
-    ctxFront.clearRect(0, 0, size, size);
-    
-    const bgGrad = ctxFront.createRadialGradient(cx, cy, 0, cx, cy, rPx);
-    bgGrad.addColorStop(0, '#2a2a35');
-    bgGrad.addColorStop(1, '#141419');
-    ctxFront.beginPath();
-    ctxFront.arc(cx, cy, rPx, 0, 2*Math.PI);
-    ctxFront.fillStyle = bgGrad;
-    ctxFront.fill();
-    ctxFront.strokeStyle = '#4a4a5a';
-    ctxFront.lineWidth = 2.5;
-    ctxFront.stroke();
-
-    if (h > 0 && h < 2 * R) {
-      const y_surface = cy + rPx - h * scale;
-      const dy = y_surface - cy;
-      
-      ctxFront.save();
-      ctxFront.beginPath();
-      ctxFront.arc(cx, cy, rPx, 0, 2*Math.PI);
-      ctxFront.clip();
-
-      const fuelGrad = ctxFront.createLinearGradient(cx, y_surface, cx, cy + rPx);
-      fuelGrad.addColorStop(0, '#ffd966');
-      fuelGrad.addColorStop(0.3, '#f7b32b');
-      fuelGrad.addColorStop(1, '#b87d12');
-      ctxFront.fillStyle = fuelGrad;
-
-      ctxFront.beginPath();
-      const startAngle = Math.asin(Math.max(-1, Math.min(1, dy / rPx)));
-      const endAngle = Math.PI - startAngle;
-      
-      ctxFront.moveTo(cx + rPx * Math.cos(startAngle), cy + rPx * Math.sin(startAngle));
-      ctxFront.arc(cx, cy, rPx, startAngle, endAngle, false);
-      
-      const dx = Math.sqrt(Math.max(0, rPx*rPx - dy*dy));
-      const waveLeft = cx - dx;
-      const waveRight = cx + dx;
-      
-      for (let i = 0; i <= 40; i++) {
-        const t = i/40;
-        const x = waveLeft + t * (waveRight - waveLeft);
-        const wave = Math.sin(t * 3 * Math.PI * 2) * 3;
-        ctxFront.lineTo(x, y_surface + wave);
-      }
-      
-      ctxFront.closePath();
-      ctxFront.fill();
-      ctxFront.restore();
-    } else if (h >= 2 * R) {
-      ctxFront.save();
-      ctxFront.beginPath();
-      ctxFront.arc(cx, cy, rPx, 0, 2*Math.PI);
-      ctxFront.clip();
-      const fuelGrad = ctxFront.createRadialGradient(cx, cy, 0, cx, cy, rPx);
-      fuelGrad.addColorStop(0, '#ffdd75');
-      fuelGrad.addColorStop(0.5, '#f7b32b');
-      fuelGrad.addColorStop(1, '#a86d0f');
-      ctxFront.fillStyle = fuelGrad;
-      ctxFront.fillRect(0, 0, size, size);
-      ctxFront.restore();
-    }
-
-    ctxFront.beginPath();
-    ctxFront.arc(cx, cy, rPx, 0, 2*Math.PI);
-    ctxFront.strokeStyle = '#5a5a6a';
-    ctxFront.lineWidth = 2;
-    ctxFront.stroke();
-
-    ctxFront.font = 'bold 14px sans-serif';
-    ctxFront.textAlign = 'center';
-    ctxFront.fillStyle = 'rgba(0,0,0,0.7)';
-    ctxFront.fillRect(cx - 60, cy - 18, 120, 36);
-    ctxFront.fillStyle = '#fff';
-    ctxFront.fillText(`${liquidVol.toFixed(2)} м³`, cx, cy - 5);
-    ctxFront.fillText(`${percentVal.toFixed(1)}%`, cx, cy + 10);
-  }
-
-  function drawSide(R, L, h) {
-    const width = 400, height = 200, pad = 16;
-    const scaleX = (width - 2*pad) / L;
-    const scaleY = (height - 2*pad) / (2*R);
-
-    ctxSide.clearRect(0, 0, width, height);
-    ctxSide.fillStyle = '#252530';
-    ctxSide.fillRect(pad, pad, L*scaleX, 2*R*scaleY);
-    ctxSide.strokeStyle = '#5a5a6a';
-    ctxSide.lineWidth = 2;
-    ctxSide.strokeRect(pad, pad, L*scaleX, 2*R*scaleY);
-
-    if (h > 0) {
-      const liquidH = Math.min(h, 2*R) * scaleY;
-      const liquidY = pad + (2*R*scaleY) - liquidH;
-      
-      const fuelGrad = ctxSide.createLinearGradient(pad, liquidY, pad, liquidY + liquidH);
-      fuelGrad.addColorStop(0, '#ffdd75');
-      fuelGrad.addColorStop(0.4, '#f7b32b');
-      fuelGrad.addColorStop(1, '#a86d0f');
-      
-      ctxSide.fillStyle = fuelGrad;
-      ctxSide.fillRect(pad, liquidY, L*scaleX, liquidH);
-    }
-
-    ctxSide.font = '11px sans-serif';
-    ctxSide.fillStyle = '#bbb';
-    ctxSide.fillText(`L = ${L.toFixed(2)} м`, pad + 10, pad + 20);
-  }
-
-  function update() {
-    const { liquid, full, percent, R, h, maxH } = calculate();
-    
-    volumeSpan.textContent = liquid.toFixed(3);
-    percentSpan.textContent = percent.toFixed(1);
-    fullVolumeSpan.textContent = full.toFixed(3);
-    sideLengthLabel.textContent = length.toFixed(2);
-    
-    const density = parseFloat(densityInput.value) || 830;
-    weightValue.textContent = (liquid * density).toFixed(1);
-    
-    diameterDisplay.value = (2 * R).toFixed(3) + ' м';
-    
-    levelSlider.max = maxH.toFixed(2);
-    levelInput.max = maxH.toFixed(2);
-    
-    if (level > maxH) {
-      level = maxH;
-      levelSlider.value = level.toFixed(2);
-      levelInput.value = level.toFixed(2);
-    }
-    
-    drawFront(R, h, liquid, percent);
-    drawSide(R, length, h);
-  }
-
-  function animate() {
-    update();
-    animFrame = requestAnimationFrame(animate);
-  }
-
-  radiusInput.addEventListener('input', (e) => {
-    const val = parseFloat(e.target.value);
-    if (val >= 0.1 && val <= 10) {
-      radius = val;
-      update();
-    }
-  });
-
-  lengthInput.addEventListener('input', (e) => {
-    const val = parseFloat(e.target.value);
-    if (val >= 0.1 && val <= 50) {
-      length = val;
-      update();
-    }
-  });
-
-  levelSlider.addEventListener('input', (e) => {
-    level = parseFloat(e.target.value);
-    levelInput.value = level.toFixed(2);
-    update();
-  });
-
-  levelInput.addEventListener('input', (e) => {
-    const val = parseFloat(e.target.value);
-    const maxH = 2 * getInnerRadius();
-    if (val >= 0 && val <= maxH) {
-      level = val;
-      levelSlider.value = level;
-      update();
-    }
-  });
-
-  densityInput.addEventListener('input', update);
-
-  document.querySelectorAll('input[name="radiusType"]').forEach(radio => {
-    radio.addEventListener('change', (e) => {
-      isOuter = e.target.value === 'outer';
-      document.getElementById('wallThicknessInput').disabled = !isOuter;
-      update();
-    });
-  });
-
-  document.getElementById('wallThicknessInput').addEventListener('input', (e) => {
-    const val = parseInt(e.target.value);
-    if (val >= 1 && val <= 500) {
-      wallThicknessMM = val;
-      update();
-    }
-  });
-
-  document.querySelectorAll('.preset-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      densityInput.value = btn.dataset.density;
-      update();
-    });
-  });
-
-  radiusInput.value = radius;
-  lengthInput.value = length;
-  levelSlider.value = level;
-  levelInput.value = level;
-  
-  update();
-  animate();
-})();
-</script>
+    <script src="script.js"></script>
 </body>
-</html>
 
+</html>
