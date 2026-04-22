@@ -2,950 +2,196 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Калькулятор топлива 🛢️</title>
   
-  
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=108668299', 'ym');
+  <!-- Yandex.Metrika counter -->
+  <script type="text/javascript">
+      (function(m,e,t,r,i,k,a){
+          m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+          m[i].l=1*new Date();
+          for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+          k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+      })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=108668299', 'ym');
 
-    ym(108668299, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/108668299" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
-
-
-
+      ym(108668299, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+  </script>
+  <noscript><div><img src="https://mc.yandex.ru/watch/108668299" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+  <!-- /Yandex.Metrika counter -->
 
   <style>
+    :root {
+      --bg: #000;
+      --card-bg: rgba(20,20,25,0.5);
+      --card-border: rgba(255,255,255,0.05);
+      --text: #fff;
+      --text-dim: rgba(255,255,255,0.5);
+      --text-mid: rgba(255,255,255,0.7);
+      --input-bg: rgba(255,255,255,0.06);
+      --input-border: rgba(255,255,255,0.15);
+      --accent: #f7b32b;
+      --canvas-bg: rgba(20,20,25,0.6);
+      --slider-track: rgba(255,255,255,0.35);
+    }
+    [data-theme="light"] {
+      --bg: #f5f7fa;
+      --card-bg: rgba(255,255,255,0.85);
+      --card-border: rgba(0,0,0,0.08);
+      --text: #1a1a2e;
+      --text-dim: rgba(0,0,0,0.45);
+      --text-mid: rgba(0,0,0,0.65);
+      --input-bg: rgba(0,0,0,0.04);
+      --input-border: rgba(0,0,0,0.12);
+      --accent: #e6a225;
+      --canvas-bg: rgba(240,242,245,0.8);
+      --slider-track: rgba(0,0,0,0.25);
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       min-height: 100vh;
-      background: #f5f7fa;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 8px;
+      padding: 20px;
+      transition: background 0.3s;
     }
     .card {
-      max-width: 760px;
-      width: 100%;
-      background: #ffffff;
-      border-radius: 24px;
-      padding: 12px 12px 6px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.04), 0 6px 12px rgba(0,0,0,0.03), 0 0 0 1px rgba(0,0,0,0.02);
-      position: relative;
+      max-width: 960px; width: 100%;
+      background: var(--card-bg);
+      backdrop-filter: blur(30px);
+      border-radius: 48px;
+      padding: 36px 36px 28px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+      border: 1px solid var(--card-border);
+      color: var(--text);
     }
-
-    /* Переключатель языка */
-    .lang-switch {
-      position: absolute;
-      top: 12px;
-      right: 14px;
-      display: flex;
-      gap: 2px;
-      background: #f0f2f5;
-      padding: 2px;
-      border-radius: 30px;
+    .header {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;
+    }
+    .controls { display: flex; gap: 8px; align-items: center; }
+    .theme-btn {
+      border: none; background: transparent; padding: 8px 14px;
+      border-radius: 60px; font-size: 0.9rem; font-weight: 500;
+      color: var(--text-mid); cursor: pointer; transition: all 0.2s;
+    }
+    .lang-switch-inner {
+      display: flex; gap: 4px; background: rgba(128,128,128,0.12);
+      padding: 4px; border-radius: 60px; border: 0.5px solid var(--card-border);
+      cursor: pointer;
+      user-select: none;
     }
     .lang-btn {
-      border: none;
-      background: transparent;
-      padding: 3px 8px;
-      border-radius: 30px;
-      font-size: 0.7rem;
-      font-weight: 500;
-      min-width: 38px;
-      text-align: center;
-      color: #5b6f82;
-      cursor: pointer;
-      transition: all 0.2s;
+      flex: 1; text-align: center;
+      border: none; background: transparent;
+      padding: 6px 12px; border-radius: 50px;
+      font-size: 0.85rem; font-weight: 500;
+      color: var(--text-mid); cursor: pointer; transition: all 0.2s;
     }
     .lang-btn.active {
-      background: #ffffff;
-      color: #1c1c1e;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.02);
-      font-weight: 600;
+      background: var(--accent); color: #000; font-weight: 600;
     }
-
     h1 {
-      margin: 0 0 10px 0;
-      font-weight: 600;
-      font-size: 1.6rem;
-      letter-spacing: -0.02em;
-      color: #1c1c1e;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding-right: 70px;
+      margin: 0; font-weight: 600; font-size: 3.2rem;
+      letter-spacing: -0.04em; color: var(--text);
+      display: flex; align-items: center; gap: 16px; flex: 1;
     }
     h1 span {
-      background: #f7b32b;
-      padding: 2px 10px;
-      border-radius: 40px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: #1c1c1e;
-      box-shadow: 0 2px 6px rgba(247,179,43,0.2);
+      background: rgba(128,128,128,0.12); backdrop-filter: blur(5px);
+      padding: 8px 22px; border-radius: 100px; font-size: 1.2rem;
+      font-weight: 500; color: var(--text); border: 0.5px solid var(--card-border);
     }
-
-    /* Панель параметров — без полного объёма */
     .params-panel {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px 6px;
-      background: #f8fafc;
-      padding: 6px 8px;
-      border-radius: 20px;
-      margin-bottom: 8px;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.02), 0 2px 4px rgba(0,0,0,0.02);
+      display: flex; flex-wrap: wrap; gap: 20px 30px; margin: 20px 0 0;
     }
     .param {
-      display: flex;
-      flex-direction: column;
-      min-width: 80px;
-      flex: 1 0 85px;
+      display: flex; flex-direction: column;
+      min-width: 150px; flex: 1 0 130px;
     }
     .param label {
-      font-size: 0.55rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.2px;
-      color: #6c7a89;
-      margin-bottom: 2px;
-      white-space: nowrap;
+      font-size: 0.8rem; font-weight: 500; text-transform: uppercase;
+      letter-spacing: 0.6px; color: var(--text-dim); margin-bottom: 8px;
     }
     .param input {
-      background: #ffffff;
-      border: 1px solid #dce3eb;
-      border-radius: 12px;
-      padding: 4px 6px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #1c1c1e;
-      outline: none;
-      font-family: inherit;
-      width: 100%;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-      transition: border 0.15s, box-shadow 0.15s;
+      background: var(--input-bg); border: 0.5px solid var(--input-border);
+      border-radius: 24px; padding: 14px 18px; font-size: 1.3rem;
+      font-weight: 500; color: var(--text); outline: none; width: 100%;
     }
-    .param input:focus { 
-      border-color: #f7b32b; 
-      box-shadow: 0 0 0 2px rgba(247,179,43,0.15), 0 1px 2px rgba(0,0,0,0.02);
+    .param input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(247,179,43,0.2);
     }
-    .param input.invalid { border-color: #e03a3a; }
     .param input[readonly] {
-      background: #f2f6fa;
-      border-color: #d0dae3;
-      color: #3a4c5e;
-      cursor: default;
+      background: rgba(128,128,128,0.06);
+      border-color: var(--card-border); color: var(--text-mid);
     }
-
-    /* Блок выбора радиуса и толщины */
-    .radius-type-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: nowrap;
-      margin: 0 0 6px 0;
-    }
-    .radio-group {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-    .radio-group label {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      font-size: 0.7rem;
-      color: #1c1c1e;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .wall-thickness {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      background: #eef3f8;
-      padding: 2px 6px;
-      border-radius: 30px;
-    }
-    .wall-thickness label {
-      font-size: 0.6rem;
-      font-weight: 500;
-      color: #3a4c5e;
-      white-space: nowrap;
-    }
-    .wall-thickness input {
-      width: 55px;
-      border: 1px solid #dce3eb;
-      border-radius: 16px;
-      padding: 3px 4px;
-      font-size: 0.75rem;
-      text-align: center;
-      background: white;
-      outline: none;
-    }
-    .wall-thickness input:disabled {
-      background: #e9ecf0;
-      color: #8a9aab;
-      border-color: #ccd5df;
-    }
-    .wall-thickness span {
-      font-size: 0.6rem;
-      color: #5b6f82;
-    }
-
-    /* Уровень + полный объём */
-    .level-area {
-      margin: 2px 0 6px;
-    }
-    .level-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 4px;
-      flex-wrap: nowrap;
-    }
-    .level-label-wrap {
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-      white-space: nowrap;
-    }
-    .level-label-wrap label {
-      font-weight: 600;
-      color: #1c1c1e;
-      font-size: 0.95rem;
-    }
-    .full-volume-inline {
-      display: flex;
-      align-items: center;
-      background: #1c1c1e;
-      border-radius: 20px;
-      padding: 4px 12px;
-      gap: 5px;
-      color: white;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    }
-    .full-volume-inline .label {
-      font-size: 0.65rem;
-      font-weight: 500;
-      opacity: 0.9;
-      text-transform: uppercase;
-    }
-    .full-volume-inline .value {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #f7b32b;
-      line-height: 1.2;
-      min-width: 65px;
-      text-align: center;
-    }
-    .full-volume-inline .unit {
-      font-size: 0.6rem;
-      margin-left: 2px;
-      opacity: 0.9;
-    }
-
-    .level-second-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: nowrap;
-    }
-    .hint-text {
-      font-size: 0.7rem;
-      color: #8e9aab;
-      font-weight: 400;
-      white-space: nowrap;
-    }
-    .level-input-box {
-      display: flex;
-      align-items: center;
-      background: #ffffff;
-      border-radius: 20px;
-      padding: 2px 2px 2px 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.02), 0 0 0 1px #e0e6ed;
-    }
-    .level-input-box input {
-      width: 70px;
-      background: transparent;
-      border: none;
-      color: #1c1c1e;
-      font-weight: 600;
-      font-size: 1rem;
-      text-align: right;
-      padding: 5px 2px;
-      outline: none;
-      font-family: inherit;
+    input[type="number"] {
       -moz-appearance: textfield;
     }
-    .level-input-box input::-webkit-outer-spin-button,
-    .level-input-box input::-webkit-inner-spin-button {
-      -webkit-appearance: inner-spin-button;
-      opacity: 0.5;
-      margin-left: 2px;
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: inner-spin-button !important;
+      opacity: 1 !important;
+      filter: invert(1) !important;
+      background: transparent !important;
+      border: none !important;
+      margin: 0 !important;
     }
-    .level-input-box span {
-      color: #1c1c1e;
-      font-weight: 500;
-      font-size: 0.95rem;
-      margin-right: 6px;
+    input[type="number"]:hover::-webkit-inner-spin-button,
+    input[type="number"]:hover::-webkit-outer-spin-button {
+      filter: invert(1) brightness(1.2) !important;
     }
+    .radius-type-row {
+      display: flex; align-items: center; gap: 28px;
+      flex-wrap: wrap; margin: 20px 0 12px;
+    }
+    .radio-group { display: flex; gap: 24px; }
+    .radio-group label {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 1.1rem; color: var(--text); cursor: pointer;
+    }
+    .wall-thickness {
+      display: flex; align-items: center; gap: 16px;
+      background: rgba(128,128,128,0.08); padding: 8px 20px 8px 24px;
+      border-radius: 60px; border: 0.5px solid var(--card-border);
+    }
+    .wall-thickness label {
+      font-size: 1rem; font-weight: 500; color: var(--text-mid);
+    }
+    .wall-thickness input {
+      width: 80px; background: rgba(0,0,0,0.15);
+      border: 0.5px solid var(--input-border); border-radius: 30px;
+      padding: 10px 12px; font-size: 1rem; text-align: center;
+      color: var(--text); outline: none;
+    }
+    .wall-thickness input:disabled { opacity: 0.4; }
+    .wall-thickness span { font-size: 0.95rem; color: var(--text-dim); }
+    .level-section { margin: 12px 0 24px; }
+    .level-row {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 12px;
+    }
+    .level-row h2 {
+      font-size: 1.5rem; font-weight: 500; color: var(--text);
+    }
+    .full-volume-badge {
+      background: rgba(0,0,0,0.3); backdrop-filter: blur(15px);
+      border-radius: 60px; padding: 10px 24px;
+      border: 0.5px solid var(--card-border);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .full-volume-badge .label {
+      font-size: 0.95rem; font-weight: 500; color: var(--text-mid);
+    }
+    .full-volume-badge .value {
+      font-size: 1.8rem; font-weight: 600; color: var(--accent);
+    }
+    .full-volume-badge .unit {
+      font-size: 0.95rem; margin-left: 4px; color: var(--text-dim);
+    }
+    .level-control-row {
+      display: flex; justify-content: space-between;
+      align-items: center; margin:
 
-    input[type=range] {
-      width: 100%;
-      margin: 2px 0 0;
-      -webkit-appearance: none;
-      background: transparent;
-    }
-    input[type=range]::-webkit-slider-runnable-track {
-      height: 4px;
-      background: #e2e8f0;
-      border-radius: 10px;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
-    }
-    input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      height: 22px;
-      width: 22px;
-      border-radius: 22px;
-      background: #f7b32b;
-      margin-top: -9px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1), 0 0 0 3px rgba(247,179,43,0.2), 0 0 0 1px #ffffff;
-      border: 2px solid #ffffff;
-      cursor: grab;
-    }
-
-    /* Результаты */
-    .inline-results {
-      display: flex;
-      gap: 6px;
-      justify-content: space-around;
-      margin: 6px 0 4px;
-    }
-    .res-badge {
-      background: #ffffff;
-      border-radius: 20px;
-      padding: 6px 10px;
-      color: #1c1c1e;
-      flex: 1;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.03), 0 0 0 1px rgba(0,0,0,0.02);
-    }
-    .res-badge .label {
-      font-size: 0.65rem;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-      color: #7a8b9b;
-    }
-    .res-badge .value {
-      font-size: 1.5rem;
-      font-weight: 700;
-      line-height: 1.1;
-      color: #1c1c1e;
-      text-align: center;
-    }
-    .res-badge .unit {
-      font-size: 0.7rem;
-      margin-left: 2px;
-      font-weight: 500;
-      color: #5b6f82;
-    }
-
-    /* Визуализация — абсолютно без лишнего места */
-    .viz-container {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      gap: 6px;
-      justify-content: center;
-      margin: 0;
-    }
-    .canvas-box {
-      background: #ffffff;
-      border-radius: 16px;
-      padding: 0;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.03), 0 0 0 1px rgba(0,0,0,0.02);
-      text-align: center;
-      flex: 1 1 240px;
-    }
-    canvas {
-      display: block;
-      margin: 0 auto;
-      border-radius: 12px;
-      background: #f2f6fa;
-      width: 100%;
-      height: auto;
-      max-width: 230px;
-      aspect-ratio: 1/1;
-    }
-    #sideCanvas {
-      aspect-ratio: 2 / 1;
-      max-width: 310px;
-    }
-    .canvas-box p {
-      margin: 2px 0 0;
-      color: #4a5c6e;
-      font-weight: 500;
-      font-size: 0.65rem;
-    }
-
-    /* Адаптив */
-    @media (max-width: 600px) {
-      .card { padding: 10px 8px 4px; }
-      h1 { font-size: 1.4rem; padding-right: 60px; }
-      .params-panel { padding: 4px 5px; }
-      .viz-container { flex-direction: column; }
-      .canvas-box { max-width: 100%; }
-      #sideCanvas { max-width: 100%; }
-    }
-    @media (max-width: 480px) {
-      .level-row { flex-wrap: wrap; gap: 4px; }
-      .level-second-row { flex-wrap: wrap; gap: 4px; }
-    }
-  </style>
-</head>
-<body>
-<div class="card">
-  <div class="lang-switch">
-    <button class="lang-btn active" data-lang="ru">RU</button>
-    <button class="lang-btn" data-lang="en">EN</button>
-  </div>
-
-  <h1>🛢️ <span data-i18n="title">Калькулятор топлива</span></h1>
-
-  <div class="params-panel">
-    <div class="param">
-      <label data-i18n="radius">📏 Радиус R (м)</label>
-      <input type="number" id="radiusInput" min="0.1" max="10" step="0.1" value="1.2" inputmode="decimal">
-    </div>
-    <div class="param">
-      <label data-i18n="length">📐 Длина L (м)</label>
-      <input type="number" id="lengthInput" min="0.1" max="50" step="0.1" value="4.5" inputmode="decimal">
-    </div>
-    <div class="param">
-      <label data-i18n="maxLevel">⚡ Макс. уровень</label>
-      <input type="text" id="diameterDisplay" readonly tabindex="-1">
-    </div>
-  </div>
-
-  <div class="radius-type-row">
-    <div class="radio-group">
-      <label>
-        <input type="radio" name="radiusType" value="inner" checked> <span data-i18n="innerRadius">Внутренний</span>
-      </label>
-      <label>
-        <input type="radio" name="radiusType" value="outer"> <span data-i18n="outerRadius">Наружный</span>
-      </label>
-    </div>
-    <div class="wall-thickness" id="wallThicknessBox">
-      <label data-i18n="wallThickness">Стенка</label>
-      <input type="number" id="wallThicknessInput" min="1" max="500" step="1" value="4" disabled>
-      <span data-i18n="millimeters">мм</span>
-    </div>
-  </div>
-
-  <div class="level-area">
-    <div class="level-row">
-      <div class="level-label-wrap">
-        <label data-i18n="fuelLevel">⛽ Уровень топлива</label>
-      </div>
-      <div class="full-volume-inline">
-        <span class="label" data-i18n="fullVolume">Полный</span>
-        <span class="value" id="fullVolumeValue">0.00</span>
-        <span class="unit">м³</span>
-      </div>
-    </div>
-    <div class="level-second-row">
-      <span class="hint-text" data-i18n="sliderHint">⚡ двигайте ползунок</span>
-      <div class="level-input-box">
-        <input type="number" id="levelInput" min="0" max="2.4" step="0.05" value="1.0" inputmode="decimal">
-        <span>м</span>
-      </div>
-    </div>
-    <input type="range" id="levelSlider" min="0" max="2.4" step="0.05" value="1.0">
-  </div>
-
-  <div class="inline-results">
-    <div class="res-badge">
-      <div class="label" data-i18n="volume">Объём</div>
-      <div class="value"><span id="volumeValue">0.00</span><span class="unit">м³</span></div>
-    </div>
-    <div class="res-badge">
-      <div class="label" data-i18n="filled">Заполнено</div>
-      <div class="value"><span id="percentValue">0.0</span><span class="unit">%</span></div>
-    </div>
-  </div>
-
-  <div class="viz-container">
-    <div class="canvas-box">
-      <canvas id="frontCanvas" width="300" height="300"></canvas>
-      <p data-i18n="crossSection">🔵 Поперечный разрез</p>
-    </div>
-    <div class="canvas-box">
-      <canvas id="sideCanvas" width="400" height="200"></canvas>
-      <p><span data-i18n="sideView">⬅️ Вид сбоку</span> (L = <span id="sideLengthLabel">4.5</span> м)</p>
-    </div>
-  </div>
-</div>
-
-<script>
-  (function() {
-    "use strict";
-
-    const translations = {
-      ru: {
-        title: 'Калькулятор топлива',
-        radius: '📏 Радиус R (м)',
-        length: '📐 Длина L (м)',
-        maxLevel: '⚡ Макс. уровень',
-        fullVolume: 'Полный',
-        fuelLevel: '⛽ Уровень топлива',
-        sliderHint: '⚡ двигайте ползунок',
-        volume: 'Объём',
-        filled: 'Заполнено',
-        crossSection: '🔵 Поперечный разрез',
-        sideView: '⬅️ Вид сбоку',
-        innerRadius: 'Внутренний',
-        outerRadius: 'Наружный',
-        wallThickness: 'Стенка',
-        meters: 'м',
-        millimeters: 'мм'
-      },
-      en: {
-        title: 'Fuel Calculator',
-        radius: '📏 Radius R (m)',
-        length: '📐 Length L (m)',
-        maxLevel: '⚡ Max level',
-        fullVolume: 'Full',
-        fuelLevel: '⛽ Fuel level',
-        sliderHint: '⚡ slide to adjust',
-        volume: 'Volume',
-        filled: 'Filled',
-        crossSection: '🔵 Cross section',
-        sideView: '⬅️ Side view',
-        innerRadius: 'Inner',
-        outerRadius: 'Outer',
-        wallThickness: 'Wall',
-        meters: 'm',
-        millimeters: 'mm'
-      }
-    };
-
-    let currentLang = 'ru';
-    function applyLanguage(lang) {
-      currentLang = lang;
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (translations[lang] && translations[lang][key]) {
-          el.textContent = translations[lang][key];
-        }
-      });
-      document.title = translations[lang].title + ' 🛢️';
-      document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.lang === lang);
-      });
-    }
-    function detectLanguage() {
-      const browserLang = navigator.language || navigator.userLanguage || 'ru';
-      return browserLang.startsWith('ru') ? 'ru' : 'en';
-    }
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.addEventListener('click', () => applyLanguage(btn.dataset.lang));
-    });
-    applyLanguage(detectLanguage());
-
-    // Элементы
-    const radiusInput = document.getElementById('radiusInput');
-    const lengthInput = document.getElementById('lengthInput');
-    const diameterDisplay = document.getElementById('diameterDisplay');
-    const levelSlider = document.getElementById('levelSlider');
-    const levelInput = document.getElementById('levelInput');
-    const volumeSpan = document.getElementById('volumeValue');
-    const percentSpan = document.getElementById('percentValue');
-    const fullVolumeSpan = document.getElementById('fullVolumeValue');
-    const sideLengthLabel = document.getElementById('sideLengthLabel');
-    const frontCanvas = document.getElementById('frontCanvas');
-    const sideCanvas = document.getElementById('sideCanvas');
-    const ctxFront = frontCanvas.getContext('2d');
-    const ctxSide = sideCanvas.getContext('2d');
-
-    const radioInner = document.querySelector('input[value="inner"]');
-    const radioOuter = document.querySelector('input[value="outer"]');
-    const wallInput = document.getElementById('wallThicknessInput');
-
-    let radius = 1.2;
-    let length = 4.5;
-    let level = 1.0;
-    let isOuter = false;
-    let wallThicknessMM = 4;
-
-    let lastValidRadius = 1.2;
-    let lastValidLength = 4.5;
-    let lastValidLevel = 1.0;
-    let lastValidWallMM = 4;
-
-    function getInnerRadius() {
-      let R = radius;
-      if (isOuter) {
-        const wallM = wallThicknessMM / 1000;
-        R = Math.max(0.001, radius - wallM);
-      }
-      return R;
-    }
-
-    function segmentArea(R, h) {
-      if (h <= 0) return 0;
-      if (h >= 2 * R) return Math.PI * R * R;
-      const y = R - h;
-      const acosArg = Math.min(1, Math.max(-1, y / R));
-      return R * R * Math.acos(acosArg) - y * Math.sqrt(Math.max(0, R*R - y*y));
-    }
-
-    function calculateVolumes() {
-      const R = getInnerRadius();
-      const L = length;
-      const h = Math.min(level, 2 * R);
-      const area = segmentArea(R, h);
-      const liquid = area * L;
-      const full = Math.PI * R * R * L;
-      const percent = full > 0 ? (liquid / full) * 100 : 0;
-      return { liquid, full, percent };
-    }
-
-    function drawFrontCanvas(R, h, liquidVol, percentVal) {
-      const size = 300;
-      const padding = 14;
-      const drawable = size - 2 * padding;
-      const scale = drawable / (2 * R);
-      
-      ctxFront.clearRect(0, 0, size, size);
-      const cx = size / 2;
-      const cy = size / 2;
-      const rPx = R * scale;
-      
-      ctxFront.beginPath();
-      ctxFront.arc(cx, cy, rPx, 0, 2 * Math.PI);
-      ctxFront.fillStyle = '#eef3f8';
-      ctxFront.fill();
-      ctxFront.strokeStyle = '#b0c4d9';
-      ctxFront.lineWidth = 2;
-      ctxFront.stroke();
-      
-      const bottomY = cy + rPx;
-      const liquidH = h * scale;
-      const liquidTopY = bottomY - liquidH;
-      
-      ctxFront.save();
-      ctxFront.beginPath();
-      ctxFront.arc(cx, cy, rPx, 0, 2 * Math.PI);
-      ctxFront.clip();
-      
-      const grad = ctxFront.createLinearGradient(cx, liquidTopY, cx, bottomY);
-      grad.addColorStop(0, '#f9d56e');
-      grad.addColorStop(1, '#d4a017');
-      ctxFront.fillStyle = grad;
-      ctxFront.fillRect(0, liquidTopY, size, bottomY - liquidTopY);
-      ctxFront.restore();
-      
-      ctxFront.beginPath();
-      ctxFront.arc(cx, cy, rPx, 0, 2 * Math.PI);
-      ctxFront.strokeStyle = '#a0b8cc';
-      ctxFront.lineWidth = 2;
-      ctxFront.stroke();
-      
-      const yFromCenter = R - h;
-      const halfChord = Math.sqrt(Math.max(0, R*R - yFromCenter*yFromCenter)) * scale;
-      ctxFront.beginPath();
-      ctxFront.moveTo(cx - halfChord, liquidTopY);
-      ctxFront.lineTo(cx + halfChord, liquidTopY);
-      ctxFront.strokeStyle = '#ffffff';
-      ctxFront.lineWidth = 2;
-      ctxFront.shadowColor = '#00000020';
-      ctxFront.shadowBlur = 4;
-      ctxFront.stroke();
-      ctxFront.shadowBlur = 0;
-      
-      ctxFront.font = 'bold 12px -apple-system, "Segoe UI", sans-serif';
-      ctxFront.textAlign = 'center';
-      const text1 = `${liquidVol.toFixed(2)} м³`;
-      const text2 = `${percentVal.toFixed(1)}%`;
-      
-      const metrics1 = ctxFront.measureText(text1);
-      const metrics2 = ctxFront.measureText(text2);
-      const maxWidth = Math.max(metrics1.width, metrics2.width) + 16;
-      
-      const textY1 = cy - 4;
-      const textY2 = cy + 12;
-      const boxY = textY1 - 12;
-      const boxHeight = 30;
-      
-      ctxFront.fillStyle = '#1c1c1ee0';
-      ctxFront.shadowBlur = 0;
-      ctxFront.beginPath();
-      ctxFront.rect(cx - maxWidth/2, boxY, maxWidth, boxHeight);
-      ctxFront.fill();
-      
-      ctxFront.fillStyle = '#ffffff';
-      ctxFront.shadowColor = '#00000040';
-      ctxFront.shadowBlur = 4;
-      ctxFront.fillText(text1, cx, textY1);
-      ctxFront.fillText(text2, cx, textY2);
-      ctxFront.shadowBlur = 0;
-      ctxFront.textAlign = 'left';
-    }
-
-    function drawSideCanvas(R, L, h) {
-      const width = 400;
-      const height = 200;
-      const pad = 10;
-      const drawW = width - 2 * pad;
-      const drawH = height - 2 * pad;
-      const scaleX = drawW / L;
-      const scaleY = drawH / (2 * R);
-      
-      ctxSide.clearRect(0, 0, width, height);
-      ctxSide.fillStyle = '#eef3f8';
-      ctxSide.fillRect(pad, pad, L * scaleX, 2 * R * scaleY);
-      
-      const liquidH = h * scaleY;
-      const liquidY = pad + (2 * R * scaleY) - liquidH;
-      
-      const grad = ctxSide.createLinearGradient(pad, liquidY, pad + L*scaleX*0.5, liquidY+liquidH);
-      grad.addColorStop(0, '#f7d654');
-      grad.addColorStop(1, '#c9951e');
-      ctxSide.fillStyle = grad;
-      ctxSide.fillRect(pad, liquidY, L * scaleX, liquidH);
-      
-      ctxSide.strokeStyle = '#a0b8cc';
-      ctxSide.lineWidth = 1.8;
-      ctxSide.strokeRect(pad, pad, L * scaleX, 2 * R * scaleY);
-      
-      ctxSide.beginPath();
-      ctxSide.moveTo(pad, liquidY);
-      ctxSide.lineTo(pad + L * scaleX, liquidY);
-      ctxSide.strokeStyle = '#ffffff';
-      ctxSide.lineWidth = 1.8;
-      ctxSide.shadowColor = '#00000020';
-      ctxSide.shadowBlur = 4;
-      ctxSide.setLineDash([4, 5]);
-      ctxSide.stroke();
-      ctxSide.setLineDash([]);
-      ctxSide.shadowBlur = 0;
-      
-      ctxSide.font = '500 10px -apple-system, "Segoe UI", sans-serif';
-      ctxSide.fillStyle = '#3a4c5e';
-      ctxSide.fillText(`L = ${L.toFixed(2)} м`, pad + 6, pad + 18);
-    }
-
-    function formatLevelValue(val) {
-      return parseFloat(val.toFixed(3)).toString();
-    }
-
-    function updateUI() {
-      const R = getInnerRadius();
-      const maxH = 2 * R;
-      
-      diameterDisplay.value = maxH.toFixed(3) + ' м';
-      levelSlider.max = maxH;
-      levelInput.max = maxH.toFixed(3);
-      
-      if (level > maxH) level = maxH;
-      if (level < 0) level = 0;
-      
-      levelSlider.value = level;
-      if (document.activeElement !== levelInput) {
-        levelInput.value = formatLevelValue(level);
-      }
-      
-      const { liquid, full, percent } = calculateVolumes();
-      volumeSpan.textContent = liquid.toFixed(3);
-      percentSpan.textContent = percent.toFixed(1);
-      fullVolumeSpan.textContent = full.toFixed(3);
-      sideLengthLabel.textContent = length.toFixed(2);
-      
-      drawFrontCanvas(R, level, liquid, percent);
-      drawSideCanvas(R, length, level);
-    }
-
-    function handleRadiusInput(e) {
-      const val = e.target.value;
-      if (val === '') return;
-      const num = parseFloat(val);
-      if (!isNaN(num) && num >= 0.1 && num <= 10) {
-        radius = num;
-        lastValidRadius = num;
-        e.target.classList.remove('invalid');
-        if (level > 2 * getInnerRadius()) level = 2 * getInnerRadius();
-        updateUI();
-      } else {
-        e.target.classList.add('invalid');
-      }
-    }
-    function handleRadiusBlur(e) {
-      const val = e.target.value;
-      if (val === '' || isNaN(parseFloat(val)) || parseFloat(val) < 0.1 || parseFloat(val) > 10) {
-        radius = lastValidRadius;
-        e.target.value = radius.toFixed(2);
-        e.target.classList.remove('invalid');
-        updateUI();
-      } else {
-        radius = parseFloat(val);
-        lastValidRadius = radius;
-        e.target.value = radius.toFixed(2);
-        updateUI();
-      }
-    }
-
-    function handleLengthInput(e) {
-      const val = e.target.value;
-      if (val === '') return;
-      const num = parseFloat(val);
-      if (!isNaN(num) && num >= 0.1 && num <= 50) {
-        length = num;
-        lastValidLength = num;
-        e.target.classList.remove('invalid');
-        updateUI();
-      } else {
-        e.target.classList.add('invalid');
-      }
-    }
-    function handleLengthBlur(e) {
-      const val = e.target.value;
-      if (val === '' || isNaN(parseFloat(val)) || parseFloat(val) < 0.1 || parseFloat(val) > 50) {
-        length = lastValidLength;
-        e.target.value = length.toFixed(2);
-        e.target.classList.remove('invalid');
-        updateUI();
-      } else {
-        length = parseFloat(val);
-        lastValidLength = length;
-        e.target.value = length.toFixed(2);
-        updateUI();
-      }
-    }
-
-    function handleWallInput(e) {
-      if (!isOuter) return;
-      const val = e.target.value;
-      if (val === '') return;
-      const num = parseInt(val, 10);
-      if (!isNaN(num) && num >= 1 && num <= 500) {
-        wallThicknessMM = num;
-        lastValidWallMM = num;
-        e.target.classList.remove('invalid');
-        if (level > 2 * getInnerRadius()) level = 2 * getInnerRadius();
-        updateUI();
-      } else {
-        e.target.classList.add('invalid');
-      }
-    }
-    function handleWallBlur(e) {
-      if (!isOuter) return;
-      const val = e.target.value;
-      if (val === '' || isNaN(parseInt(val, 10)) || parseInt(val, 10) < 1 || parseInt(val, 10) > 500) {
-        wallThicknessMM = lastValidWallMM;
-        e.target.value = wallThicknessMM;
-        e.target.classList.remove('invalid');
-        updateUI();
-      } else {
-        wallThicknessMM = parseInt(val, 10);
-        lastValidWallMM = wallThicknessMM;
-        e.target.value = wallThicknessMM;
-        updateUI();
-      }
-    }
-
-    function handleLevelInput(e) {
-      const val = e.target.value;
-      if (val === '') return;
-      const num = parseFloat(val);
-      const maxH = 2 * getInnerRadius();
-      if (!isNaN(num) && num >= 0 && num <= maxH) {
-        level = num;
-        lastValidLevel = num;
-        levelSlider.value = level;
-        e.target.classList.remove('invalid');
-        const R = getInnerRadius();
-        const { liquid, full, percent } = calculateVolumes();
-        volumeSpan.textContent = liquid.toFixed(3);
-        percentSpan.textContent = percent.toFixed(1);
-        fullVolumeSpan.textContent = full.toFixed(3);
-        sideLengthLabel.textContent = length.toFixed(2);
-        drawFrontCanvas(R, level, liquid, percent);
-        drawSideCanvas(R, length, level);
-        diameterDisplay.value = (2 * R).toFixed(3) + ' м';
-      } else {
-        e.target.classList.add('invalid');
-      }
-    }
-    function handleLevelBlur(e) {
-      const val = e.target.value;
-      const maxH = 2 * getInnerRadius();
-      if (val === '' || isNaN(parseFloat(val)) || parseFloat(val) < 0 || parseFloat(val) > maxH) {
-        level = lastValidLevel;
-        e.target.value = formatLevelValue(level);
-        e.target.classList.remove('invalid');
-        updateUI();
-      } else {
-        level = parseFloat(val);
-        lastValidLevel = level;
-        e.target.value = formatLevelValue(level);
-        updateUI();
-      }
-    }
-
-    radiusInput.addEventListener('input', handleRadiusInput);
-    radiusInput.addEventListener('blur', handleRadiusBlur);
-    lengthInput.addEventListener('input', handleLengthInput);
-    lengthInput.addEventListener('blur', handleLengthBlur);
-    wallInput.addEventListener('input', handleWallInput);
-    wallInput.addEventListener('blur', handleWallBlur);
-    levelInput.addEventListener('input', handleLevelInput);
-    levelInput.addEventListener('blur', handleLevelBlur);
-    
-    levelSlider.addEventListener('input', () => {
-      level = parseFloat(levelSlider.value);
-      lastValidLevel = level;
-      levelInput.value = formatLevelValue(level);
-      updateUI();
-    });
-
-    radioInner.addEventListener('change', () => {
-      isOuter = false;
-      wallInput.disabled = true;
-      if (level > 2 * getInnerRadius()) level = 2 * getInnerRadius();
-      updateUI();
-    });
-    radioOuter.addEventListener('change', () => {
-      isOuter = true;
-      wallInput.disabled = false;
-      if (level > 2 * getInnerRadius()) level = 2 * getInnerRadius();
-      updateUI();
-    });
-
-    // Старт
-    radius = 1.2; length = 4.5; level = 1.0; wallThicknessMM = 4;
-    lastValidRadius = radius; lastValidLength = length; lastValidLevel = level; lastValidWallMM = wallThicknessMM;
-    radiusInput.value = radius.toFixed(1);
-    lengthInput.value = length.toFixed(1);
-    wallInput.value = wallThicknessMM;
-    updateUI();
-
-    frontCanvas.addEventListener('touchstart', e => e.preventDefault(), {passive: false});
-    sideCanvas.addEventListener('touchstart', e => e.preventDefault(), {passive: false});
-  })();
-</script>
-</body>
-</html>
