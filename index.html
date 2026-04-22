@@ -193,5 +193,584 @@
     }
     .level-control-row {
       display: flex; justify-content: space-between;
-      align-items: center; margin:
+      align-items: center; margin: 16px 0 8px;
+    }
+    .hint-text { font-size: 1rem; color: var(--text-dim); }
+    .level-input-box {
+      display: flex; align-items: center;
+      background: rgba(128,128,128,0.08); backdrop-filter: blur(5px);
+      border-radius: 60px; padding: 4px 4px 4px 20px;
+      border: 0.5px solid var(--input-border);
+    }
+    .level-input-box input {
+      width: 95px; border: none; background: transparent;
+      font-size: 1.5rem; font-weight: 600; text-align: right;
+      padding: 8px 4px; color: var(--text); outline: none;
+    }
+    .level-input-box span {
+      font-size: 1.2rem; font-weight: 500;
+      margin-right: 16px; color: var(--text-mid);
+    }
+    input[type=range] {
+      width: 100%; margin: 12px 0 8px;
+      -webkit-appearance: none;
+      background: transparent;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      height: 8px;
+      background: var(--slider-track);
+      border-radius: 10px;
+      border: 1px solid rgba(128,128,128,0.2);
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+    }
+    input[type=range]::-moz-range-track {
+      height: 8px;
+      background: var(--slider-track);
+      border-radius: 10px;
+      border: 1px solid rgba(128,128,128,0.2);
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 32px; width: 32px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-top: -13px;
+      border: 2px solid var(--text);
+      cursor: grab;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+    input[type=range]::-moz-range-thumb {
+      height: 32px; width: 32px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--text);
+      cursor: grab;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+    .results-grid {
+      display: flex; gap: 32px; margin: 30px 0 16px;
+    }
+    .result-item { flex: 1; text-align: center; }
+    .result-item .label {
+      font-size: 0.9rem; font-weight: 500; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 8px;
+    }
+    .result-item .value {
+      font-size: 3.8rem; font-weight: 600;
+      letter-spacing: -0.03em; color: var(--text); line-height: 1.1;
+    }
+    .result-item .unit {
+      font-size: 1.4rem; font-weight: 400;
+      color: var(--text-dim); margin-left: 8px;
+    }
+    .weight-row {
+      display: flex; gap: 24px; align-items: center;
+      justify-content: center; margin: 8px 0 20px; flex-wrap: wrap;
+    }
+    .weight-result {
+      font-size: 1.1rem; color: var(--text-mid);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .weight-result .val {
+      font-weight: 600; color: var(--accent); font-size: 1.3rem;
+    }
+    .density-input {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(128,128,128,0.08); padding: 6px 14px;
+      border-radius: 60px; border: 0.5px solid var(--card-border);
+    }
+    .density-input label {
+      font-size: 0.85rem; color: var(--text-dim);
+    }
+    .density-input input {
+      width: 70px; background: transparent; border: none;
+      color: var(--text); font-size: 1rem; text-align: center; outline: none;
+    }
+    .fuel-presets {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      margin: 12px 0; justify-content: center;
+    }
+    .preset-btn {
+      padding: 6px 14px;
+      background: rgba(128,128,128,0.08);
+      border: 0.5px solid var(--card-border);
+      border-radius: 60px;
+      font-size: 0.85rem;
+      color: var(--text-mid);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .preset-btn:hover, .preset-btn.active {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+    .viz-container {
+      display: flex; flex-direction: row; flex-wrap: wrap;
+      gap: 28px; justify-content: center; margin-top: 8px;
+    }
+    .canvas-box { flex: 1 1 280px; text-align: center; }
+    canvas {
+      display: block; margin: 0 auto 4px; border-radius: 28px;
+      background: var(--canvas-bg); backdrop-filter: blur(5px);
+      width: 100%; height: auto; max-width: 300px; aspect-ratio: 1/1;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+    #sideCanvas { aspect-ratio: 2/1; max-width: 380px; }
+    .canvas-box p {
+      margin: 0; font-size: 0.95rem;
+      font-weight: 500; color: var(--text-mid);
+    }
+    @media (max-width: 700px) {
+      body { padding: 12px; }
+      .card { padding: 28px 20px 20px; }
+      h1 { font-size: 2.5rem; }
+      .header { flex-direction: column; align-items: flex-start; }
+      .results-grid { gap: 16px; }
+      .result-item .value { font-size: 2.8rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <h1>🛢️ <span data-i18n="title">Калькулятор топлива</span></h1>
+    <div class="controls">
+      <button class="theme-btn" id="themeBtn" title="Toggle theme">🌓</button>
+      <div class="lang-switch-inner" id="langSwitch">
+        <button class="lang-btn active" data-lang="ru">RU</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="params-panel">
+    <div class="param">
+      <label data-i18n="radius">📏 Радиус R (м)</label>
+      <input type="number" id="radiusInput" min="0.1" max="10" step="0.1" value="1.2">
+    </div>
+    <div class="param">
+      <label data-i18n="length">📐 Длина L (м)</label>
+      <input type="number" id="lengthInput" min="0.1" max="50" step="0.1" value="4.5">
+    </div>
+    <div class="param">
+      <label data-i18n="maxLevel">⚡ Макс. уровень</label>
+      <input type="text" id="diameterDisplay" readonly>
+    </div>
+  </div>
+
+  <div class="radius-type-row">
+    <div class="radio-group">
+      <label><input type="radio" name="radiusType" value="inner" checked> <span data-i18n="inner">Внутренний</span></label>
+      <label><input type="radio" name="radiusType" value="outer"> <span data-i18n="outer">Наружный</span></label>
+    </div>
+    <div class="wall-thickness">
+      <label data-i18n="wall">Стенка</label>
+      <input type="number" id="wallThicknessInput" min="1" max="500" step="1" value="4" disabled>
+      <span data-i18n="mm">мм</span>
+    </div>
+  </div>
+
+  <div class="level-section">
+    <div class="level-row">
+      <h2 data-i18n="fuelLevel">⛽ Уровень топлива</h2>
+      <div class="full-volume-badge">
+        <span class="label" data-i18n="full">Полный</span>
+        <span class="value" id="fullVolumeValue">0.00</span>
+        <span class="unit">м³</span>
+      </div>
+    </div>
+    <div class="level-control-row">
+      <span class="hint-text" data-i18n="hint">⚡ двигайте ползунок</span>
+      <div class="level-input-box">
+        <input type="number" id="levelInput" min="0" max="2.4" step="0.05" value="1.0">
+        <span>м</span>
+      </div>
+    </div>
+    <input type="range" id="levelSlider" min="0" max="2.4" step="0.05" value="1.0">
+  </div>
+
+  <div class="results-grid">
+    <div class="result-item">
+      <div class="label" data-i18n="volume">Объём</div>
+      <div class="value"><span id="volumeValue">0.00</span><span class="unit">м³</span></div>
+    </div>
+    <div class="result-item">
+      <div class="label" data-i18n="filled">Заполнено</div>
+      <div class="value"><span id="percentValue">0.0</span><span class="unit">%</span></div>
+    </div>
+  </div>
+
+  <div class="fuel-presets">
+    <button class="preset-btn active" data-density="830">Дизель</button>
+    <button class="preset-btn" data-density="750">Бензин</button>
+    <button class="preset-btn" data-density="910">Мазут</button>
+    <button class="preset-btn" data-density="800">Керосин</button>
+  </div>
+
+  <div class="weight-row">
+    <div class="density-input">
+      <label data-i18n="density">⚖️ Плотность</label>
+      <input type="number" id="densityInput" min="100" max="1200" step="10" value="830">
+      <span>кг/м³</span>
+    </div>
+    <div class="weight-result">
+      <span data-i18n="mass">Масса:</span>
+      <span class="val" id="weightValue">0</span>
+      <span>кг</span>
+    </div>
+  </div>
+
+  <div class="viz-container">
+    <div class="canvas-box">
+      <canvas id="frontCanvas" width="300" height="300"></canvas>
+      <p data-i18n="cross">🔵 Поперечный разрез</p>
+    </div>
+    <div class="canvas-box">
+      <canvas id="sideCanvas" width="400" height="200"></canvas>
+      <p>⬅️ <span data-i18n="side">Вид сбоку</span> (L = <span id="sideLengthLabel">4.5</span> м)</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const translations = {
+    ru: {
+      title: 'Калькулятор топлива',
+      radius: '📏 Радиус R (м)',
+      length: '📐 Длина L (м)',
+      maxLevel: '⚡ Макс. уровень',
+      inner: 'Внутренний',
+      outer: 'Наружный',
+      wall: 'Стенка',
+      mm: 'мм',
+      fuelLevel: '⛽ Уровень топлива',
+      full: 'Полный',
+      hint: '⚡ двигайте ползунок',
+      volume: 'Объём',
+      filled: 'Заполнено',
+      density: '⚖️ Плотность',
+      mass: 'Масса:',
+      cross: '🔵 Поперечный разрез',
+      side: 'Вид сбоку'
+    },
+    en: {
+      title: 'Fuel Calculator',
+      radius: '📏 Radius R (m)',
+      length: '📐 Length L (m)',
+      maxLevel: '⚡ Max level',
+      inner: 'Inner',
+      outer: 'Outer',
+      wall: 'Wall',
+      mm: 'mm',
+      fuelLevel: '⛽ Fuel level',
+      full: 'Full',
+      hint: '⚡ slide to adjust',
+      volume: 'Volume',
+      filled: 'Filled',
+      density: '⚖️ Density',
+      mass: 'Weight:',
+      cross: '🔵 Cross section',
+      side: 'Side view'
+    }
+  };
+
+  let currentLang = 'ru';
+  
+  function applyLanguage(lang) {
+    currentLang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (translations[lang] && translations[lang][key]) {
+        el.textContent = translations[lang][key];
+      }
+    });
+    document.title = translations[lang].title + ' 🛢️';
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+  }
+
+  const radiusInput = document.getElementById('radiusInput');
+  const lengthInput = document.getElementById('lengthInput');
+  const diameterDisplay = document.getElementById('diameterDisplay');
+  const levelSlider = document.getElementById('levelSlider');
+  const levelInput = document.getElementById('levelInput');
+  const volumeSpan = document.getElementById('volumeValue');
+  const percentSpan = document.getElementById('percentValue');
+  const fullVolumeSpan = document.getElementById('fullVolumeValue');
+  const sideLengthLabel = document.getElementById('sideLengthLabel');
+  const densityInput = document.getElementById('densityInput');
+  const weightValue = document.getElementById('weightValue');
+  const themeBtn = document.getElementById('themeBtn');
+  const langSwitch = document.getElementById('langSwitch');
+  const frontCanvas = document.getElementById('frontCanvas');
+  const sideCanvas = document.getElementById('sideCanvas');
+  const ctxFront = frontCanvas.getContext('2d');
+  const ctxSide = sideCanvas.getContext('2d');
+
+  let radius = 1.2;
+  let length = 4.5;
+  let level = 1.0;
+  let isOuter = false;
+  let wallThicknessMM = 4;
+  let animFrame = null;
+
+  let currentTheme = localStorage.getItem('theme') || 'dark';
+  function setTheme(theme) {
+    currentTheme = theme;
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    themeBtn.textContent = theme === 'dark' ? '🌓' : '☀️';
+  }
+  themeBtn.addEventListener('click', () => setTheme(currentTheme === 'dark' ? 'light' : 'dark'));
+  setTheme(currentTheme);
+
+  langSwitch.addEventListener('click', () => {
+    const newLang = currentLang === 'ru' ? 'en' : 'ru';
+    applyLanguage(newLang);
+  });
+
+  function getInnerRadius() {
+    if (isOuter) {
+      return Math.max(0.001, radius - wallThicknessMM / 1000);
+    }
+    return radius;
+  }
+
+  function segmentArea(R, h) {
+    if (h <= 0) return 0;
+    if (h >= 2 * R) return Math.PI * R * R;
+    const y = R - h;
+    const acosArg = Math.min(1, Math.max(-1, y / R));
+    return R * R * Math.acos(acosArg) - y * Math.sqrt(Math.max(0, R*R - y*y));
+  }
+
+  function calculate() {
+    const R = getInnerRadius();
+    const maxH = 2 * R;
+    const h = Math.min(level, maxH);
+    const area = segmentArea(R, h);
+    const liquid = area * length;
+    const full = Math.PI * R * R * length;
+    const percent = full > 0 ? (liquid / full) * 100 : 0;
+    return { liquid, full, percent, R, h, maxH };
+  }
+
+  function drawFront(R, h, liquidVol, percentVal) {
+    const size = 300, padding = 16;
+    const scale = (size - 2 * padding) / (2 * R);
+    const cx = size/2, cy = size/2, rPx = R * scale;
+
+    ctxFront.clearRect(0, 0, size, size);
+    
+    const bgGrad = ctxFront.createRadialGradient(cx, cy, 0, cx, cy, rPx);
+    bgGrad.addColorStop(0, '#2a2a35');
+    bgGrad.addColorStop(1, '#141419');
+    ctxFront.beginPath();
+    ctxFront.arc(cx, cy, rPx, 0, 2*Math.PI);
+    ctxFront.fillStyle = bgGrad;
+    ctxFront.fill();
+    ctxFront.strokeStyle = '#4a4a5a';
+    ctxFront.lineWidth = 2.5;
+    ctxFront.stroke();
+
+    if (h > 0 && h < 2 * R) {
+      const y_surface = cy + rPx - h * scale;
+      const dy = y_surface - cy;
+      
+      ctxFront.save();
+      ctxFront.beginPath();
+      ctxFront.arc(cx, cy, rPx, 0, 2*Math.PI);
+      ctxFront.clip();
+
+      const fuelGrad = ctxFront.createLinearGradient(cx, y_surface, cx, cy + rPx);
+      fuelGrad.addColorStop(0, '#ffd966');
+      fuelGrad.addColorStop(0.3, '#f7b32b');
+      fuelGrad.addColorStop(1, '#b87d12');
+      ctxFront.fillStyle = fuelGrad;
+
+      ctxFront.beginPath();
+      const startAngle = Math.asin(Math.max(-1, Math.min(1, dy / rPx)));
+      const endAngle = Math.PI - startAngle;
+      
+      ctxFront.moveTo(cx + rPx * Math.cos(startAngle), cy + rPx * Math.sin(startAngle));
+      ctxFront.arc(cx, cy, rPx, startAngle, endAngle, false);
+      
+      const dx = Math.sqrt(Math.max(0, rPx*rPx - dy*dy));
+      const waveLeft = cx - dx;
+      const waveRight = cx + dx;
+      
+      for (let i = 0; i <= 40; i++) {
+        const t = i/40;
+        const x = waveLeft + t * (waveRight - waveLeft);
+        const wave = Math.sin(t * 3 * Math.PI * 2) * 3;
+        ctxFront.lineTo(x, y_surface + wave);
+      }
+      
+      ctxFront.closePath();
+      ctxFront.fill();
+      ctxFront.restore();
+    } else if (h >= 2 * R) {
+      ctxFront.save();
+      ctxFront.beginPath();
+      ctxFront.arc(cx, cy, rPx, 0, 2*Math.PI);
+      ctxFront.clip();
+      const fuelGrad = ctxFront.createRadialGradient(cx, cy, 0, cx, cy, rPx);
+      fuelGrad.addColorStop(0, '#ffdd75');
+      fuelGrad.addColorStop(0.5, '#f7b32b');
+      fuelGrad.addColorStop(1, '#a86d0f');
+      ctxFront.fillStyle = fuelGrad;
+      ctxFront.fillRect(0, 0, size, size);
+      ctxFront.restore();
+    }
+
+    ctxFront.beginPath();
+    ctxFront.arc(cx, cy, rPx, 0, 2*Math.PI);
+    ctxFront.strokeStyle = '#5a5a6a';
+    ctxFront.lineWidth = 2;
+    ctxFront.stroke();
+
+    ctxFront.font = 'bold 14px sans-serif';
+    ctxFront.textAlign = 'center';
+    ctxFront.fillStyle = 'rgba(0,0,0,0.7)';
+    ctxFront.fillRect(cx - 60, cy - 18, 120, 36);
+    ctxFront.fillStyle = '#fff';
+    ctxFront.fillText(`${liquidVol.toFixed(2)} м³`, cx, cy - 5);
+    ctxFront.fillText(`${percentVal.toFixed(1)}%`, cx, cy + 10);
+  }
+
+  function drawSide(R, L, h) {
+    const width = 400, height = 200, pad = 16;
+    const scaleX = (width - 2*pad) / L;
+    const scaleY = (height - 2*pad) / (2*R);
+
+    ctxSide.clearRect(0, 0, width, height);
+    ctxSide.fillStyle = '#252530';
+    ctxSide.fillRect(pad, pad, L*scaleX, 2*R*scaleY);
+    ctxSide.strokeStyle = '#5a5a6a';
+    ctxSide.lineWidth = 2;
+    ctxSide.strokeRect(pad, pad, L*scaleX, 2*R*scaleY);
+
+    if (h > 0) {
+      const liquidH = Math.min(h, 2*R) * scaleY;
+      const liquidY = pad + (2*R*scaleY) - liquidH;
+      
+      const fuelGrad = ctxSide.createLinearGradient(pad, liquidY, pad, liquidY + liquidH);
+      fuelGrad.addColorStop(0, '#ffdd75');
+      fuelGrad.addColorStop(0.4, '#f7b32b');
+      fuelGrad.addColorStop(1, '#a86d0f');
+      
+      ctxSide.fillStyle = fuelGrad;
+      ctxSide.fillRect(pad, liquidY, L*scaleX, liquidH);
+    }
+
+    ctxSide.font = '11px sans-serif';
+    ctxSide.fillStyle = '#bbb';
+    ctxSide.fillText(`L = ${L.toFixed(2)} м`, pad + 10, pad + 20);
+  }
+
+  function update() {
+    const { liquid, full, percent, R, h, maxH } = calculate();
+    
+    volumeSpan.textContent = liquid.toFixed(3);
+    percentSpan.textContent = percent.toFixed(1);
+    fullVolumeSpan.textContent = full.toFixed(3);
+    sideLengthLabel.textContent = length.toFixed(2);
+    
+    const density = parseFloat(densityInput.value) || 830;
+    weightValue.textContent = (liquid * density).toFixed(1);
+    
+    diameterDisplay.value = (2 * R).toFixed(3) + ' м';
+    
+    levelSlider.max = maxH.toFixed(2);
+    levelInput.max = maxH.toFixed(2);
+    
+    if (level > maxH) {
+      level = maxH;
+      levelSlider.value = level.toFixed(2);
+      levelInput.value = level.toFixed(2);
+    }
+    
+    drawFront(R, h, liquid, percent);
+    drawSide(R, length, h);
+  }
+
+  function animate() {
+    update();
+    animFrame = requestAnimationFrame(animate);
+  }
+
+  radiusInput.addEventListener('input', (e) => {
+    const val = parseFloat(e.target.value);
+    if (val >= 0.1 && val <= 10) {
+      radius = val;
+      update();
+    }
+  });
+
+  lengthInput.addEventListener('input', (e) => {
+    const val = parseFloat(e.target.value);
+    if (val >= 0.1 && val <= 50) {
+      length = val;
+      update();
+    }
+  });
+
+  levelSlider.addEventListener('input', (e) => {
+    level = parseFloat(e.target.value);
+    levelInput.value = level.toFixed(2);
+    update();
+  });
+
+  levelInput.addEventListener('input', (e) => {
+    const val = parseFloat(e.target.value);
+    const maxH = 2 * getInnerRadius();
+    if (val >= 0 && val <= maxH) {
+      level = val;
+      levelSlider.value = level;
+      update();
+    }
+  });
+
+  densityInput.addEventListener('input', update);
+
+  document.querySelectorAll('input[name="radiusType"]').forEach(radio => {
+    radio.addEventListener('change', (e) => {
+      isOuter = e.target.value === 'outer';
+      document.getElementById('wallThicknessInput').disabled = !isOuter;
+      update();
+    });
+  });
+
+  document.getElementById('wallThicknessInput').addEventListener('input', (e) => {
+    const val = parseInt(e.target.value);
+    if (val >= 1 && val <= 500) {
+      wallThicknessMM = val;
+      update();
+    }
+  });
+
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      densityInput.value = btn.dataset.density;
+      update();
+    });
+  });
+
+  radiusInput.value = radius;
+  lengthInput.value = length;
+  levelSlider.value = level;
+  levelInput.value = level;
+  
+  update();
+  animate();
+})();
+</script>
+</body>
+</html>
 
